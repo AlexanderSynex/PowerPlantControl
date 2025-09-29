@@ -1,0 +1,6 @@
+services:
+  web-server:
+    build: .
+    container_name: battery-web-server
+    ports:
+      - "3000:3000"
