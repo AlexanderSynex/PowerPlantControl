@@ -6,8 +6,6 @@ import Modal from './Modal'
 import PowerPlant from './PowerPlant'
 import PlantDetail from './PlantDetail'
 
-import Alert from '@mui/material/Alert';
-
 
 function AppTitle() {
   return <div className='element app-header'>
