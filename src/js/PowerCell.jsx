@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import '../cs/styles.css';
 
+import { Skeleton } from '@mui/material';
+
 const basic_fill = 'lightgrey';
 
 function stateToColor(state) {
@@ -38,7 +40,7 @@ function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadId}) {
         onDisplayDetails();
     };
 
-    if (loading) return <div>Loading</div>
+    if (loading) return <Skeleton animation="wave" />
 
     return (
         <div 

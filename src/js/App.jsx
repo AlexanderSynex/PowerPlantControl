@@ -42,10 +42,7 @@ export default function App() {
             setLoading(false);
         })
         .then(() => {
-        })
-        .catch(error => console.error('Error fetching config:', error)));
-
-        const ws = new WebSocket(`${socketUrl}/${clientId}`)
+          const ws = new WebSocket(`${socketUrl}/${clientId}`)
           ws.onopen = event => {
             ws.send(JSON.stringify({
               user: clientId,
@@ -59,7 +56,11 @@ export default function App() {
           };
           setSocket(ws)
           return () => ws.close()
-    }, [apiUrl, socketUrl]);
+        })
+        .catch(error => console.error('Error fetching config:', error)));
+
+        
+    }, []);
 
   if (loading) return <div>Loading...</div>
 
