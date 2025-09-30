@@ -11,10 +11,10 @@ function stateMessage(state) {
     return 'Свободна'; //empty
 }
 
-function ControlGroup({isEmpty, url, onClickClose}) {
+function ControlGroup({isEmpty, open_url, onClickClose}) {
 
-    const performAction = (action) => {
-        fetch(`${url}/${action}`,{
+    const openDoor = () => {
+        fetch(open_url,{
                 method: 'PUT',
                 headers: {
                     'Accept': 'application/json',
@@ -26,15 +26,15 @@ function ControlGroup({isEmpty, url, onClickClose}) {
             })
     };
 
-    if (!isEmpty) return (<div>
+    if (isEmpty) return (<div>
         <button
-            class='element control'
-            onClick={()=>{performAction('take')}}>Забрать</button>
+            className='element control'
+            onClick={()=>openDoor()}>Поставить на зарядку</button>
     </div>)
     
     return <button
-        class='element control'
-        onClick={()=>{performAction('place')}}>Открыть</button>
+        className='element control'
+        onClick={()=>openDoor()}>Забрать аккумулятор</button>
 }
 
 function PlantDetail({url, onClickClose}) {
@@ -42,7 +42,9 @@ function PlantDetail({url, onClickClose}) {
     const [id, setId] = useState(null);
     const [charge, setCharge] = useState(0);
     const [status, setStatus] = useState(null);
+    const [reserved, setReserved] = useState(false);
     const [empty, setEmpty] = useState(true);
+    const [openUrl, setOpenUrl] = useState(null)
 
     useEffect(() => {
             fetch(url)  // Replace with your config endpoint
@@ -52,22 +54,31 @@ function PlantDetail({url, onClickClose}) {
                 setId(data.id);
                 setCharge(data.charge);
                 setLoading(false);
+                setOpenUrl(data.open_url)
             })
             .catch(error => console.error('Error fetching plant details:', error)));
         }, []);
 
     if (loading) return <div>Loading details...</div>
 
-    return <div class="element">
+    return <div className="element">
         <h3>Зарядная ячейка №{id + 1}</h3>
         <div>
+            <p>
+            {reserved ? "Ячейка зарезервирована" : ""}
             Состояние: <b>{stateMessage(status)}</b><br/>
             Заряд: <b>{charge}%</b>
+            </p>
         </div>
-            <ControlGroup
-            onClickClose={onClickClose}
-            url={url}
-            isEmpty={status == 'empty'}/>
+            {
+            reserved ?
+                null :
+                <ControlGroup
+                    onClickClose={onClickClose}
+                    open_url={openUrl}
+                    isEmpty={status == 'empty'}
+                />
+            }
     </div>
 }
 

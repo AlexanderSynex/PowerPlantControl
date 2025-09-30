@@ -18,6 +18,11 @@ function AppTitle() {
 export default function App() {
   const [isDetailsOpen, setDetailsOpen] = useState(false)
   const [currentCell, setCurrentCell] = useState(null)
+  const [reloadId, setReloadId] = useState(null);
+
+  const handleCellClick = (id) => {
+    setReloadId(id);
+  };
 
   const openDetails = () => {setDetailsOpen(true)};
   const closeDetails = () => {setDetailsOpen(false)};
@@ -28,7 +33,10 @@ export default function App() {
         <AppTitle/>
       </header>
       <div className='App-body'>
-        <PowerPlant onDisplayDetails={openDetails} onSyncCell={setCurrentCell}/>
+        <PowerPlant 
+          onDisplayDetails={openDetails} 
+          setCellApiUrl={setCurrentCell}
+        />
         <Modal 
           isOpen={isDetailsOpen}
           onClose={closeDetails}

@@ -3,11 +3,10 @@ import React, { useState, useEffect } from "react";
 import "./styles.css"
 import PowerLayer from "./PowerLayer";
 
-// const status_api_url = "http://192.168.31.25:8005/api/status";
 const api_server = "http://192.168.31.25:8000";
 const status_api_url = `${api_server}/api/status`
 
-function PowerPlant({onDisplayDetails, onSyncCell}) {
+function PowerPlant({onDisplayDetails, setCellApiUrl}) {
     const [layers, setLayers] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -30,7 +29,8 @@ function PowerPlant({onDisplayDetails, onSyncCell}) {
                     key={i}
                     url={layerApi}
                     onDisplayDetails={onDisplayDetails}
-                    onSyncCell={onSyncCell}
+                    setCellApiUrl={setCellApiUrl}
+                    reloadTrigger={true}
                 />
             ))}
         </div>

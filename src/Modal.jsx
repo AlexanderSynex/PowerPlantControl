@@ -3,14 +3,10 @@ import "./Modal.css"
 
 
 function Modal({ isOpen, onClose, children }) {
-  if (!isOpen) return null; // Don't render if not open
-
+  if (!isOpen) return null;
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close-btn" onClick={onClose}>
-          &times;
-        </button>
         {children}
       </div>
     </div>

@@ -13,13 +13,12 @@ function stateToColor(state) {
     }
 }
 
-function PowerCell({url, onDisplayDetails, setCellCurrent}) {
+function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadTrigger}) {
     const [color, setColor] = useState(basic_fill);
     const [status, setStatus] = useState('disabled');
-    const [loading, setLoading] = useState(true)
-
-    const takeApi = `${url}/take`;
-    const placeApi = `${url}/place`;
+    const [loading, setLoading] = useState(true);
+    const [withDoor, setWithDoor] = useState(false);
+    const [opened, setOpened] = useState(false);
 
     useEffect(() => {
             fetch(url)  // Replace with your config endpoint
@@ -27,13 +26,15 @@ function PowerCell({url, onDisplayDetails, setCellCurrent}) {
             .then(data => {
                 setStatus(data.status)
                 setColor(stateToColor(data.status))
+                setWithDoor(data.with_door)
+                setOpened(data.opened)
                 setLoading(false);
             })
             .catch(error => console.error('Error fetching layer config:', error)))
-        }, [color, status]);
+        }, [color, status, reloadTrigger]);
 
     const handleClick = () => {
-        setCellCurrent(url);
+        setCellApiUrl(url);
         onDisplayDetails();
     };
 
@@ -45,6 +46,9 @@ function PowerCell({url, onDisplayDetails, setCellCurrent}) {
             onClick={handleClick}
             style={{backgroundColor: `${color}`}}
             >
+        {opened ? "Unlocked" : "Locked"}<br/>
+        {withDoor ? "Doored" : ""}
+        
         </div>
     );
 }

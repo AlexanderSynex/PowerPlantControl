@@ -4,7 +4,7 @@ import "./styles.css"
 
 import PowerCell from "./PowerCell";
 
-function PowerLayer({url, onDisplayDetails, onSyncCell}) {
+function PowerLayer({url, onDisplayDetails, onSyncCell, setCellApiUrl}) {
     const [batteries, setBatteries] = useState(null);
     const [loading, setLoading] = useState(true)
 
@@ -27,7 +27,7 @@ function PowerLayer({url, onDisplayDetails, onSyncCell}) {
                     key={i}
                     url={battery}
                     onDisplayDetails={onDisplayDetails}
-                    setCellCurrent={onSyncCell}
+                    setCellApiUrl={setCellApiUrl}
                 />
             ))}
         </div>
