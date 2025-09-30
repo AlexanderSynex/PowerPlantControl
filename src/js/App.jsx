@@ -4,14 +4,14 @@ import '../cs/styles.css'
 
 import PowerPlant from './PowerPlant'
 
+import { Snackbar } from '@mui/material'
+
 function AppTitle({userId}) {
   return <div className='element app-header'>
       <img src={reactLogo} className="App-logo" alt="logo" />
       <p>
         Зарядная станция
       </p>
-
-      <div>User: {userId}</div>
   </div>
 }
 
@@ -32,6 +32,8 @@ export default function App() {
   const [reloadId, setReloadId] = useState(null);
 
   const [messages, setMessages] = useState([])
+  
+  const [open, setOpen] = useState(true)
 
   useEffect(() => {
         fetch(backend_entrypoint)  // Replace with your config endpoint
@@ -68,9 +70,7 @@ export default function App() {
     <>
     <div className="App">
       <header>
-        <AppTitle
-          userId={clientId}
-        />
+        <AppTitle/>
       </header>
       <div className='App-body'>
         <PowerPlant
@@ -79,6 +79,14 @@ export default function App() {
           reloadId={reloadId}
         />
       </div>
+      
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={() => {setOpen(false)}}
+        message={`Авторизированы как Пользователь #${clientId}`}
+      />
+
     </div>
     </>
   )
