@@ -3,15 +3,36 @@ import React, { useState, useEffect } from "react";
 import "../cs/styles.css"
 import PowerLayer from "./PowerLayer";
 
-const api_server = "http://192.168.31.25:8000";
-const status_api_url = `${api_server}/api/status`
+import io from "socket.io-client"
 
-function PowerPlant({onDisplayDetails, setCellApiUrl,reloadId}) {
+let socket;
+
+export class Crate extends React.Component{
+    constructor(props)
+    {
+        super(props)
+        const {dispatch} = this.props
+        socket = io.connect('http://192.168.31.25:8000')
+        console.dir(socket)
+    }
+    componentWillUnmount() {
+       socket.disconnect()
+       alert("Disconnecting Socket as component will unmount")
+    }
+    render(){
+        <div>
+            Crate should be there
+        </div>
+    }
+}
+
+
+function PowerPlant({apiUrl, onDisplayDetails, setCellApiUrl,reloadId}) {
     const [layers, setLayers] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch(status_api_url)  // Replace with your config endpoint
+        fetch(apiUrl)  // Replace with your config endpoint
         .then(response => response.json()
         .then(data => {
             setLayers(data.layers);
