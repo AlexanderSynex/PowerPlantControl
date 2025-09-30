@@ -4,8 +4,8 @@ import '../cs/styles.css'
 
 import PowerPlant from './PowerPlant'
 
-import { Snackbar } from '@mui/material'
-
+import { Snackbar, Button,
+  Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@mui/material'
 function AppTitle({userId}) {
   return <div className='element app-header'>
       <img src={reactLogo} className="App-logo" alt="logo" />
@@ -33,7 +33,8 @@ export default function App() {
 
   const [messages, setMessages] = useState([])
   
-  const [open, setOpen] = useState(true)
+  const [openInfo, setOpenInfo] = useState(true)
+  const [openDetails, setOpenDetails] = useState(false)
 
   useEffect(() => {
         fetch(backend_entrypoint)  // Replace with your config endpoint
@@ -73,6 +74,7 @@ export default function App() {
         <AppTitle/>
       </header>
       <div className='App-body'>
+        <button onClick={() => setOpenDetails(true)}>OPEN MEEE</button>
         <PowerPlant
           apiUrl={apiUrl}
           setCellApiUrl={setCurrentCell}
@@ -81,11 +83,36 @@ export default function App() {
       </div>
       
       <Snackbar
-        open={open}
+        open={openInfo}
         autoHideDuration={3000}
-        onClose={() => {setOpen(false)}}
+        onClose={() => {setOpenInfo(false)}}
         message={`Авторизированы как Пользователь #${clientId}`}
       />
+
+      <Dialog
+        open={openDetails}
+        onClose={() => setOpenDetails(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {`Зарядная станция №12`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Состояние
+          </DialogContentText>
+          <DialogContentText id="alert-dialog-description">
+            Заряд
+          </DialogContentText>
+          <DialogContentText id="alert-dialog-description">
+            Бронь
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDetailsOpen(false)}>Забронировать</Button>
+        </DialogActions>
+      </Dialog>
 
     </div>
     </>
