@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './styles.css'
+import reactLogo from '../assets/react.svg'
+import '../cs/styles.css'
 
 import Modal from './Modal'
 import PowerPlant from './PowerPlant'
 import PlantDetail from './PlantDetail'
-
 
 function AppTitle() {
   return <div className='element app-header'>
@@ -22,7 +21,9 @@ export default function App() {
   const [reloadId, setReloadId] = useState(null);
 
   const openDetails = () => {setDetailsOpen(true)};
-  const closeDetails = () => {setDetailsOpen(false)};
+  const closeDetails = () => {
+    setDetailsOpen(false);
+  };
 
   return (
     <>

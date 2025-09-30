@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import "./styles.css"
+import "../cs/styles.css"
 import PowerLayer from "./PowerLayer";
 
 const api_server = "http://192.168.31.25:8000";

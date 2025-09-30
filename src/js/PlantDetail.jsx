@@ -1,6 +1,6 @@
 import React, { useState, useEffect, act } from "react";
 
-import "./styles.css"
+import "../cs/styles.css"
 
 function stateMessage(state) {
     switch (state) {

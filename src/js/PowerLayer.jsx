@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import "./styles.css"
+import "../cs/styles.css"
 
 import PowerCell from "./PowerCell";
 
