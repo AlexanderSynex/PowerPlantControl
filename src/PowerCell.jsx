@@ -13,7 +13,7 @@ function stateToColor(state) {
     }
 }
 
-function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadTrigger}) {
+function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadId}) {
     const [color, setColor] = useState(basic_fill);
     const [status, setStatus] = useState('disabled');
     const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadTrigger}) {
                 setLoading(false);
             })
             .catch(error => console.error('Error fetching layer config:', error)))
-        }, [color, status, reloadTrigger]);
+        }, [color, status,reloadId]);
 
     const handleClick = () => {
         setCellApiUrl(url);

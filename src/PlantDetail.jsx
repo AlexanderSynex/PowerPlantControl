@@ -37,7 +37,7 @@ function ControlGroup({isEmpty, open_url, onClickClose}) {
         onClick={()=>openDoor()}>Забрать аккумулятор</button>
 }
 
-function PlantDetail({url, onClickClose}) {
+function PlantDetail({url, onClickClose, setReloadId}) {
     const [loading, setLoading] = useState(true);
     const [id, setId] = useState(null);
     const [charge, setCharge] = useState(0);
@@ -59,6 +59,11 @@ function PlantDetail({url, onClickClose}) {
             .catch(error => console.error('Error fetching plant details:', error)));
         }, []);
 
+    const handleAcceptClose = () => {
+        setReloadId(id)
+        onClickClose()
+    };
+
     if (loading) return <div>Loading details...</div>
 
     return <div className="element">
@@ -74,7 +79,7 @@ function PlantDetail({url, onClickClose}) {
             reserved ?
                 null :
                 <ControlGroup
-                    onClickClose={onClickClose}
+                    onClickClose={handleAcceptClose}
                     open_url={openUrl}
                     isEmpty={status == 'empty'}
                 />

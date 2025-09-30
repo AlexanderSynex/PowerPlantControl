@@ -6,7 +6,7 @@ import PowerLayer from "./PowerLayer";
 const api_server = "http://192.168.31.25:8000";
 const status_api_url = `${api_server}/api/status`
 
-function PowerPlant({onDisplayDetails, setCellApiUrl}) {
+function PowerPlant({onDisplayDetails, setCellApiUrl,reloadId}) {
     const [layers, setLayers] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -18,7 +18,7 @@ function PowerPlant({onDisplayDetails, setCellApiUrl}) {
             setLoading(false);
         })
         .catch(error => console.error('Error fetching config:', error)));
-    }, []);
+    }, [reloadId]);
 
     if (loading) return <div>Loading...</div>;
 
@@ -31,6 +31,7 @@ function PowerPlant({onDisplayDetails, setCellApiUrl}) {
                     onDisplayDetails={onDisplayDetails}
                     setCellApiUrl={setCellApiUrl}
                     reloadTrigger={true}
+                    reloadId={reloadId}
                 />
             ))}
         </div>

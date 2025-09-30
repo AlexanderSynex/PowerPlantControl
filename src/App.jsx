@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './styles.css'
 
 import Modal from './Modal'
 import PowerPlant from './PowerPlant'
 import PlantDetail from './PlantDetail'
+
+import Alert from '@mui/material/Alert';
+
 
 function AppTitle() {
   return <div className='element app-header'>
@@ -20,12 +23,9 @@ export default function App() {
   const [currentCell, setCurrentCell] = useState(null)
   const [reloadId, setReloadId] = useState(null);
 
-  const handleCellClick = (id) => {
-    setReloadId(id);
-  };
-
   const openDetails = () => {setDetailsOpen(true)};
   const closeDetails = () => {setDetailsOpen(false)};
+
   return (
     <>
     <div className="App">
@@ -33,9 +33,10 @@ export default function App() {
         <AppTitle/>
       </header>
       <div className='App-body'>
-        <PowerPlant 
-          onDisplayDetails={openDetails} 
+        <PowerPlant
+          onDisplayDetails={openDetails}
           setCellApiUrl={setCurrentCell}
+          reloadId={reloadId}
         />
         <Modal 
           isOpen={isDetailsOpen}
@@ -44,6 +45,7 @@ export default function App() {
             <PlantDetail
               url={currentCell}
               onClickClose={closeDetails}
+              setReloadId={setReloadId}
             />
           }>
         </Modal>
