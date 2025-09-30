@@ -2,17 +2,36 @@ import { useEffect, useState } from 'react'
 import reactLogo from '../assets/react.svg'
 import '../cs/styles.css'
 
+import { HiOutlineMap } from "react-icons/hi";
+
 import PowerPlant from './PowerPlant'
 
 import { Snackbar, Button,
   Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@mui/material'
+
+
+function LocationSelector() {
+
+  const [location, setLocation] = useState("СПб")
+
+  return (<div className='location-info'>
+    <div>location</div>
+    <div className='location-logo'><HiOutlineMap/></div>
+  </div>)
+}
+
+
 function AppTitle({userId}) {
   return <div className='element app-header'>
+    <div className='app-name'>
       <img src={reactLogo} className="App-logo" alt="logo" />
       <p>
         Зарядная станция
       </p>
+      </div>
+      <LocationSelector/>
   </div>
+  
 }
 
 const backend_entrypoint = 'http://192.168.31.25:8000/'

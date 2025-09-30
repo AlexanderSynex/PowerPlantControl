@@ -1,6 +1,7 @@
 .App-logo {
   height: inherit;
   pointer-events: none;
+  margin: 0 10px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -13,11 +14,20 @@
   background-color: #282c34;
   min-height: max(10px, 1vmin);
   display: flex;
+  padding: 0 10px;
   flex-direction: row;
   align-items: center;
   justify-content: left;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.app-name {
+  display: flex;
+  flex:auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
 }
 
 html, body, #root {
@@ -99,16 +109,16 @@ html, body, #root {
 
 .control {
   background: fixed;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 10px;
-  background-color: coral;
+  border-radius: 4px;
+  /* padding: 0 5px; */
+  background-color: rgb(255, 255, 255);
   border: none; 
   font-size: 1rem;
   color: black;
   cursor: pointer;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   justify-content: center;
 }
 
@@ -117,3 +127,15 @@ html, body, #root {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
+.location-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.location-logo {
+  height: inherit;
+  /* pointer-events: none; */
+  margin: 0 10px;
+}

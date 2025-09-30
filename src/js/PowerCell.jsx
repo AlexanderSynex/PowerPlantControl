@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import '../cs/styles.css';
 
 import { Skeleton } from '@mui/material';
+import { FaLock, FaLockOpen } from "react-icons/fa";
 
 const basic_fill = 'lightgrey';
 
@@ -48,7 +49,7 @@ function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadId}) {
             onClick={handleClick}
             style={{backgroundColor: `${color}`}}
             >
-        {opened ? "Unlocked" : "Locked"}<br/>
+        {opened ? <FaLockOpen/> : <FaLock/>}<br/>
         {withDoor ? "Doored" : ""}
         
         </div>
