@@ -14,7 +14,6 @@
   background-color: #282c34;
   min-height: max(10px, 1vmin);
   display: flex;
-  padding: 0 10px;
   flex-direction: row;
   align-items: center;
   justify-content: left;
@@ -33,16 +32,14 @@
 html, body, #root {
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .App-body {
-  background-color: #282c34;
-  height: 95vh;
+  background-color: #d5d9da;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -69,8 +66,10 @@ html, body, #root {
 .plant-cell {
   border: 1px solid black;
   border-radius: 4px;
+  width: inherit;
+  height: 100%;
   display: flex;
-  flex: auto;
+  flex: inherit;
   cursor: pointer;
   color: black;
   font-size: calc(10px + 2vmin);
@@ -78,7 +77,7 @@ html, body, #root {
 
 
 .plant-cell:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -89,28 +88,25 @@ html, body, #root {
     flex-direction: row;
     gap: 10px;
     width: 100%;
-    height: calc(10px + 4vh);
+    height: inherit;
+    justify-content: center;
+    align-items: center;
 }
 
 .plant-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: absolute;
     justify-content: center;
-    width: 95vw;
-    gap: 10px;
-}
-
-.grid-container {
-    display: grid;
-    width: 10vmin;
+    height: min(80%, 80vh);
+    width: 60vw;
     gap: 10px;
 }
 
 .control {
   background: fixed;
   border-radius: 4px;
-  /* padding: 0 5px; */
   background-color: rgb(255, 255, 255);
   border: none; 
   font-size: 1rem;

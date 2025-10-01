@@ -8,24 +8,26 @@ import AlertTitle from '@mui/material/AlertTitle';
 
 import PowerPlant from './PowerPlant'
 
-import { Snackbar, Dialog, IconButton } from '@mui/material'
+import { Snackbar, Dialog, IconButton, CircularProgress } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip';
 import PlantDetail from './PlantDetail';
 
+import { load } from '@2gis/mapgl';
+// import { YMaps } from '@pbe/react-yandex-maps';
 
 function LocationSelector() {
   const [location, setLocation] = useState("СПб")
 
-  return (<div className='location-info'>
+  return (<div className='app-header location-info'>
     <Tooltip title="Выбрать станцию">
-      <IconButton><HiOutlineMap/>
+      <IconButton style={{color: "white"}}><HiOutlineMap/>
       </IconButton>
     </Tooltip>
   </div>)
 }
 
 
-function AppTitle({userId}) {
+function AppTitle() {
   return (
   <div className='element app-header'>
     <div className='app-name'>
@@ -46,6 +48,12 @@ const backend_entrypoint = 'http://192.168.31.25:8000'
 
 export default function App() {
 
+  const map = new mapgl.Map('map-container', {
+      key: 'Your API access key',
+      center: [55.31878, 25.23584],
+      zoom: 13,
+  });
+
   const [clientId, _] = useState(
     Math.floor(new Date().getTime() / 1000)
   );
@@ -65,7 +73,8 @@ export default function App() {
 
   const [openInfo, setOpenInfo] = useState(true)
   const [openDetails, setOpenDetails] = useState(false)
-
+  const [openMaps, setOpenMaps] = useState(false)
+  
   const [openedCrates, setOpenedCrates] = useState([])
 
   const open_plant = (id) => {
@@ -131,7 +140,7 @@ export default function App() {
   const showDetails = () => setOpenDetails(true);
   const hideDetails = () => setOpenDetails(false)
 
-  if (loading) return <div>Loading...</div>
+  if (loading) return <CircularProgress />
 
   return (
     <>
@@ -178,6 +187,21 @@ export default function App() {
       />
 
       {/* Dialog. Информация о ячейке */}
+      <Dialog
+        open={openDetails}
+        onClose={() => setOpenDetails(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <PlantDetail
+        url={currentCell}
+        onClickClose={hideDetails}
+        onOpen={open_plant}
+        socket={socket.current}
+        />
+      </Dialog>
+
+      {/* Карта */}
       <Dialog
         open={openDetails}
         onClose={() => setOpenDetails(false)}

@@ -5,13 +5,15 @@ import '../cs/styles.css';
 import { Skeleton } from '@mui/material';
 import { FaLock, FaLockOpen } from "react-icons/fa";
 
+import { RiBattery2ChargeLine } from "react-icons/ri";
+
 const basic_fill = 'lightgrey';
 
 function stateToColor(state) {
     switch (state) {
-        case "ready": return 'green';
+        case "ready": return 'blue';
         case "disabled": return 'grey';
-        case "charging": return 'orange';
+        case "charging": return 'red';
         default: return basic_fill; //empty
     }
 }
@@ -22,6 +24,7 @@ function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadId}) {
     const [loading, setLoading] = useState(true);
     const [withDoor, setWithDoor] = useState(false);
     const [opened, setOpened] = useState(false);
+    const [charging, setCharging] = useState(false)
 
     useEffect(() => {
             fetch(url)  // Replace with your config endpoint
@@ -32,6 +35,7 @@ function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadId}) {
                 setWithDoor(data.with_door)
                 setOpened(data.opened)
                 setLoading(false);
+                setCharging(data.status === 'charging');
             })
             .catch(error => console.error('Error fetching layer config:', error)))
         }, [color, status,reloadId]);
@@ -47,11 +51,10 @@ function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadId}) {
         <div 
             className='element plant-cell' 
             onClick={handleClick}
-            style={{backgroundColor: `${color}`}}
+            style={{backgroundColor: `${color}`, display: 'flex', alignItems: 'center', justifyContent: 'center'}}
             >
         {opened ? <FaLockOpen/> : <FaLock/>}<br/>
-        {withDoor ? "Doored" : ""}
-        
+        {charging ? <RiBattery2ChargeLine /> : null}
         </div>
     );
 }
