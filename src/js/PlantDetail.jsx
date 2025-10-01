@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 
 import "../cs/styles.css"
 
-import { Button, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@mui/material'
+import { 
+  Button, 
+  DialogContent, 
+  DialogContentText, 
+  DialogTitle, 
+  DialogActions,
+  CircularProgress } from '@mui/material'
+
 
 function stateMessage(state) {
   switch (state) {
@@ -42,7 +49,7 @@ function PlantDetail({ url, onClickClose, socket, onOpen }) {
     onClickClose()
   };
 
-  if (loading) return <div>Loading details...</div>
+  if (loading) return <CircularProgress color="inherit" />
 
   return (<div>
     <DialogTitle id="alert-dialog-title">

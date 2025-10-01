@@ -3,10 +3,13 @@ import reactLogo from '../assets/react.svg'
 import '../cs/styles.css'
 
 import { HiOutlineMap } from "react-icons/hi";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 import PowerPlant from './PowerPlant'
 
-import { Snackbar, Dialog } from '@mui/material'
+import { Snackbar, Dialog, IconButton } from '@mui/material'
+import Tooltip from '@mui/material/Tooltip';
 import PlantDetail from './PlantDetail';
 
 
@@ -14,8 +17,10 @@ function LocationSelector() {
   const [location, setLocation] = useState("СПб")
 
   return (<div className='location-info'>
-    <div>{location}</div>
-    <div className='location-logo'><HiOutlineMap/></div>
+    <Tooltip title="Выбрать станцию">
+      <IconButton><HiOutlineMap/>
+      </IconButton>
+    </Tooltip>
   </div>)
 }
 
@@ -55,8 +60,13 @@ export default function App() {
 
   const [messages, setMessages] = useState([])
   
+  const [openPlantSuccess, setOpenPlantSuccess] = useState(false)
+  const [openOpenedWarning, setOpenOpenedWarning] = useState(false)
+
   const [openInfo, setOpenInfo] = useState(true)
   const [openDetails, setOpenDetails] = useState(false)
+
+  const [openedCrates, setOpenedCrates] = useState([])
 
   const open_plant = (id) => {
     socket.current.send(JSON.stringify({
@@ -75,14 +85,25 @@ export default function App() {
           }))
         };
         socket.current.onmessage = event => {
-          if (isServerEvent(event))
-          {
+          if (isServerEvent(event)) {
             let data = JSON.parse(event.data);
             let action = data.action;
             if (action === 'update') {
-              let plant = data.plant
-              setReloadId(plant)
+              let plant = data.plant;
+              setReloadId(plant);
+              if (data.who === `${clientId}`) {
+                setOpenPlantSuccess(true);
+              }
             }
+
+            if (action === 'notify_close') {
+              console.log(data)
+              if (data.who === `${clientId}`) {
+                setOpenedCrates(data.plant);
+                setOpenOpenedWarning(true);
+              }
+            }
+
           }
         };
         socket.current.onclose = event => {};
@@ -127,13 +148,36 @@ export default function App() {
         />
       </div>
       
+      {/* Popup. Успешное открытие */}
+      <Snackbar open={openPlantSuccess} autoHideDuration={6000} onClose={() => {setOpenPlantSuccess(false)}}>
+          <Alert severity="success" color="warning" onClose={() => {setOpenPlantSuccess(false)}}>
+            <AlertTitle>Ячейка открыта</AlertTitle>
+              Не забудьте закрыть ячейку
+          </Alert>
+      </Snackbar>
+
+      {/* Alert. Незакрытые ячейки */}
+      <Snackbar
+        open={openOpenedWarning}
+        onClose={() => {setOpenOpenedWarning(false)}}
+        message={`Авторизированы как Пользователь ${clientId}`}
+      >
+        <Alert severity="warning">
+          <AlertTitle>Закройте дверцы</AlertTitle>
+            Дверцы ячеек {openedCrates.map((indexId) => (indexId + 1)).join(', ')} не были закрыты
+        </Alert>
+
+      </Snackbar>
+
+      {/* Popup. Информация об авторизации */}
       <Snackbar
         open={openInfo}
         autoHideDuration={3000}
         onClose={() => {setOpenInfo(false)}}
-        message={`Авторизированы как Пользователь #${clientId}`}
+        message={`Авторизированы как Пользователь ${clientId}`}
       />
 
+      {/* Dialog. Информация о ячейке */}
       <Dialog
         open={openDetails}
         onClose={() => setOpenDetails(false)}
