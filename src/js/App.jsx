@@ -31,6 +31,12 @@ function AppTitle({userId}) {
   </div>)
 }
 
+function isServerEvent(message) {
+  const parsedMessage = JSON.parse(message.data);
+  return parsedMessage.type === "server";
+}
+
+
 const backend_entrypoint = 'http://192.168.31.25:8000'
 
 export default function App() {
@@ -52,6 +58,14 @@ export default function App() {
   const [openInfo, setOpenInfo] = useState(true)
   const [openDetails, setOpenDetails] = useState(false)
 
+  const open_plant = (id) => {
+    socket.current.send(JSON.stringify({
+      user: clientId,
+      action: "open",
+      plant: id
+    }))
+  }
+
   useEffect(() => {
         socket.current = new WebSocket(`${backend_entrypoint}/ws/${clientId}`);
         socket.current.onopen = event => {
@@ -59,6 +73,17 @@ export default function App() {
             user: clientId,
             action: "connect"
           }))
+        };
+        socket.current.onmessage = event => {
+          if (isServerEvent(event))
+          {
+            let data = JSON.parse(event.data);
+            let action = data.action;
+            if (action === 'update') {
+              let plant = data.plant
+              setReloadId(plant)
+            }
+          }
         };
         socket.current.onclose = event => {};
 
@@ -84,10 +109,6 @@ export default function App() {
 
   const showDetails = () => setOpenDetails(true);
   const hideDetails = () => setOpenDetails(false)
-
-  
-
-
 
   if (loading) return <div>Loading...</div>
 
@@ -122,6 +143,7 @@ export default function App() {
         <PlantDetail
         url={currentCell}
         onClickClose={hideDetails}
+        onOpen={open_plant}
         socket={socket.current}
         />
       </Dialog>

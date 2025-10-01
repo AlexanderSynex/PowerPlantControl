@@ -13,7 +13,7 @@ function stateMessage(state) {
   return 'Свободна'; //empty
 }
 
-function PlantDetail({ url, onClickClose, socket }) {
+function PlantDetail({ url, onClickClose, socket, onOpen }) {
   const [loading, setLoading] = useState(true);
   const [id, setId] = useState(null);
   const [charge, setCharge] = useState(0);
@@ -34,15 +34,10 @@ function PlantDetail({ url, onClickClose, socket }) {
         .catch(error => console.error('Error fetching plant details:', error)));
   }, []);
 
-  const open_plant = () => {
-    socket.send(JSON.stringify({
-      action: "open",
-      crate: id
-    }))
-  }
+  
 
   const handleAcceptClose = () => {
-    open_plant()
+    onOpen(id)
     onClickClose()
   };
 
