@@ -162,7 +162,7 @@ export default function App() {
         onClose={() => {setOpenOpenedWarning(false)}}
         message={`Авторизированы как Пользователь ${clientId}`}
       >
-        <Alert severity="warning">
+        <Alert severity="warning" color="error">
           <AlertTitle>Закройте дверцы</AlertTitle>
             Дверцы ячеек {openedCrates.map((indexId) => (indexId + 1)).join(', ')} не были закрыты
         </Alert>
