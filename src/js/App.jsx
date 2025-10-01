@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import reactLogo from '../assets/react.svg'
 import '../cs/styles.css'
 
@@ -6,45 +6,42 @@ import { HiOutlineMap } from "react-icons/hi";
 
 import PowerPlant from './PowerPlant'
 
-import { Snackbar, Button,
-  Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@mui/material'
+import { Snackbar, Dialog } from '@mui/material'
+import PlantDetail from './PlantDetail';
 
 
 function LocationSelector() {
-
   const [location, setLocation] = useState("СПб")
 
   return (<div className='location-info'>
-    <div>location</div>
+    <div>{location}</div>
     <div className='location-logo'><HiOutlineMap/></div>
   </div>)
 }
 
 
 function AppTitle({userId}) {
-  return <div className='element app-header'>
+  return (
+  <div className='element app-header'>
     <div className='app-name'>
       <img src={reactLogo} className="App-logo" alt="logo" />
-      <p>
         Зарядная станция
-      </p>
-      </div>
-      <LocationSelector/>
-  </div>
-  
+    </div>
+    <LocationSelector/>
+  </div>)
 }
 
-const backend_entrypoint = 'http://192.168.31.25:8000/'
+const backend_entrypoint = 'http://192.168.31.25:8000'
 
 export default function App() {
 
-  const [clientId, setClienId] = useState(
+  const [clientId, _] = useState(
     Math.floor(new Date().getTime() / 1000)
   );
 
   const [apiUrl, setApiUrl] = useState(null);
   const [socketUrl, setSocketUrl] = useState(null);
-  const [socket, setSocket] = useState(null);
+  const socket = useRef(null);
   const [loading, setLoading] = useState(true);
   const [isDetailsOpen, setDetailsOpen] = useState(false);
   const [currentCell, setCurrentCell] = useState(null);
@@ -56,6 +53,23 @@ export default function App() {
   const [openDetails, setOpenDetails] = useState(false)
 
   useEffect(() => {
+        socket.current = new WebSocket(`${backend_entrypoint}/ws/${clientId}`);
+        socket.current.onopen = event => {
+          socket.current.send(JSON.stringify({
+            user: clientId,
+            action: "connect"
+          }))
+        };
+        socket.current.onclose = event => {};
+
+        const wsCurrent = socket.current;
+
+        return () => {
+            wsCurrent.close();
+        };
+    }, []);
+
+  useEffect(() => {
         fetch(backend_entrypoint)  // Replace with your config endpoint
         .then(response => response.json()
         .then(data => {
@@ -63,26 +77,17 @@ export default function App() {
             setSocketUrl(data.socket);
             setLoading(false);
         })
-        .then(() => {
-          const ws = new WebSocket(`${socketUrl}/${clientId}`)
-          ws.onopen = event => {
-            ws.send(JSON.stringify({
-              user: clientId,
-              action: "connect"
-            }))
-          }
-
-          ws.onmessage = e => {
-            const message = JSON.parse(e.data);
-            setMessages([...messages, message]);
-          };
-          setSocket(ws)
-          return () => ws.close()
-        })
         .catch(error => console.error('Error fetching config:', error)));
-
-        
     }, []);
+
+  
+
+  const showDetails = () => setOpenDetails(true);
+  const hideDetails = () => setOpenDetails(false)
+
+  
+
+
 
   if (loading) return <div>Loading...</div>
 
@@ -93,10 +98,10 @@ export default function App() {
         <AppTitle/>
       </header>
       <div className='App-body'>
-        <button onClick={() => setOpenDetails(true)}>OPEN MEEE</button>
         <PowerPlant
           apiUrl={apiUrl}
           setCellApiUrl={setCurrentCell}
+          onDisplayDetails={showDetails}
           reloadId={reloadId}
         />
       </div>
@@ -114,24 +119,14 @@ export default function App() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {`Зарядная станция №12`}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Состояние
-          </DialogContentText>
-          <DialogContentText id="alert-dialog-description">
-            Заряд
-          </DialogContentText>
-          <DialogContentText id="alert-dialog-description">
-            Бронь
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDetailsOpen(false)}>Забронировать</Button>
-        </DialogActions>
+        <PlantDetail
+        url={currentCell}
+        onClickClose={hideDetails}
+        socket={socket.current}
+        />
       </Dialog>
+
+      
 
     </div>
     </>

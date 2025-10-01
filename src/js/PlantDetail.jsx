@@ -2,89 +2,79 @@ import React, { useState, useEffect } from "react";
 
 import "../cs/styles.css"
 
+import { Button, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@mui/material'
+
 function stateMessage(state) {
-    switch (state) {
-        case "ready": return 'Заряжена';
-        case "disabled": return 'Отключена';
-        case "charging": return 'Заряжается';
-    }
-    return 'Свободна'; //empty
+  switch (state) {
+    case "ready": return 'Заряжена';
+    case "disabled": return 'Отключена';
+    case "charging": return 'Заряжается';
+  }
+  return 'Свободна'; //empty
 }
 
-function ControlGroup({isEmpty, open_url, onClickClose}) {
+function PlantDetail({ url, onClickClose, socket }) {
+  const [loading, setLoading] = useState(true);
+  const [id, setId] = useState(null);
+  const [charge, setCharge] = useState(0);
+  const [status, setStatus] = useState(null);
+  const [reserved, setReserved] = useState(false);
+  const [empty, setEmpty] = useState(true);
 
-    const openDoor = () => {
-        fetch(open_url,{
-                method: 'PUT',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            }).then((responce) => {
-                alert("Подтвердите завершение действия")
-                onClickClose();
-            })
-    };
+  useEffect(() => {
+    fetch(url)  // Replace with your config endpoint
+      .then(response => response.json()
+        .then(data => {
+          setStatus(data.status);
+          setId(data.id);
+          setCharge(data.charge);
+          setLoading(false);
+          setReserved(data.reserved)
+        })
+        .catch(error => console.error('Error fetching plant details:', error)));
+  }, []);
 
-    if (isEmpty) return (<div>
-        <button
-            className='element control'
-            onClick={()=>openDoor()}>Поставить на зарядку</button>
-    </div>)
-    
-    return <button
-        className='element control'
-        onClick={()=>openDoor()}>Забрать аккумулятор</button>
-}
+  const open_plant = () => {
+    socket.send(JSON.stringify({
+      action: "open",
+      crate: id
+    }))
+  }
 
-function PlantDetail({url, onClickClose, setReloadId}) {
-    const [loading, setLoading] = useState(true);
-    const [id, setId] = useState(null);
-    const [charge, setCharge] = useState(0);
-    const [status, setStatus] = useState(null);
-    const [reserved, setReserved] = useState(false);
-    const [empty, setEmpty] = useState(true);
-    const [openUrl, setOpenUrl] = useState(null)
+  const handleAcceptClose = () => {
+    open_plant()
+    onClickClose()
+  };
 
-    useEffect(() => {
-            fetch(url)  // Replace with your config endpoint
-            .then(response => response.json()
-            .then(data => {
-                setStatus(data.status);
-                setId(data.id);
-                setCharge(data.charge);
-                setLoading(false);
-                setOpenUrl(data.open_url)
-            })
-            .catch(error => console.error('Error fetching plant details:', error)));
-        }, []);
+  if (loading) return <div>Loading details...</div>
 
-    const handleAcceptClose = () => {
-        setReloadId(id)
-        onClickClose()
-    };
-
-    if (loading) return <div>Loading details...</div>
-
-    return <div className="element">
-        <h3>Зарядная ячейка №{id + 1}</h3>
-        <div>
-            <p>
-            {reserved ? "Ячейка зарезервирована" : ""}
-            Состояние: <b>{stateMessage(status)}</b><br/>
-            Заряд: <b>{charge}%</b>
-            </p>
-        </div>
-            {
-            reserved ?
-                null :
-                <ControlGroup
-                    onClickClose={handleAcceptClose}
-                    open_url={openUrl}
-                    isEmpty={status == 'empty'}
-                />
-            }
-    </div>
+  return (<div>
+    <DialogTitle id="alert-dialog-title">
+      {`Зарядная станция ${id + 1}`}
+    </DialogTitle>
+    <DialogContent>
+      <DialogContentText id="alert-dialog-description">
+        Состояние: <b>{stateMessage(status)}</b>
+      </DialogContentText>
+      <DialogContentText id="alert-dialog-description">
+        Заряд: <b>{charge}%</b>
+      </DialogContentText>
+      {reserved ?
+        <DialogContentText id="alert-dialog-description">
+          Ячейка зарезервирована
+        </DialogContentText>
+        : null
+      }
+    </DialogContent>
+    <DialogActions>
+      <Button
+        onClick={handleAcceptClose}
+        variant='contained'
+      >
+        Открыть
+      </Button>
+    </DialogActions>
+  </div>)
 }
 
 export default PlantDetail;
