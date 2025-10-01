@@ -147,9 +147,6 @@ export default function App() {
         socket={socket.current}
         />
       </Dialog>
-
-      
-
     </div>
     </>
   )

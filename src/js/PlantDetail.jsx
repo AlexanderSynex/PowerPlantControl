@@ -19,7 +19,7 @@ function PlantDetail({ url, onClickClose, socket, onOpen }) {
   const [charge, setCharge] = useState(0);
   const [status, setStatus] = useState(null);
   const [reserved, setReserved] = useState(false);
-  const [empty, setEmpty] = useState(true);
+  const [opened, setOpened] = useState(false);
 
   useEffect(() => {
     fetch(url)  // Replace with your config endpoint
@@ -30,6 +30,7 @@ function PlantDetail({ url, onClickClose, socket, onOpen }) {
           setCharge(data.charge);
           setLoading(false);
           setReserved(data.reserved)
+          setOpened(data.opened)
         })
         .catch(error => console.error('Error fetching plant details:', error)));
   }, []);
@@ -61,14 +62,17 @@ function PlantDetail({ url, onClickClose, socket, onOpen }) {
         : null
       }
     </DialogContent>
-    <DialogActions>
-      <Button
-        onClick={handleAcceptClose}
-        variant='contained'
-      >
-        Открыть
-      </Button>
-    </DialogActions>
+    {opened ? 
+    null
+    : <DialogActions>
+        <Button
+          onClick={handleAcceptClose}
+          variant='contained'
+        >
+          Открыть
+        </Button>
+      </DialogActions>
+    }
   </div>)
 }
 
