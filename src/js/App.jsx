@@ -3,38 +3,37 @@ import reactLogo from '../assets/react.svg'
 import '../cs/styles.css'
 
 import { HiOutlineMap } from "react-icons/hi";
-import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 
 import PowerPlant from './PowerPlant'
-
-import { Snackbar, Dialog, IconButton, CircularProgress } from '@mui/material'
-import Tooltip from '@mui/material/Tooltip';
 import PlantDetail from './PlantDetail';
 
-import { load } from '@2gis/mapgl';
-// import { YMaps } from '@pbe/react-yandex-maps';
+import { Container, Dialog, IconButton, CircularProgress } from '@mui/material'
+import Tooltip from '@mui/material/Tooltip';
 
-function LocationSelector() {
+import {NewUserNotification, CloseDoorNotification, CrateOpenNotification} from './Notifications'
+
+function LocationSelector({setOpenMaps}) {
   const [location, setLocation] = useState("СПб")
 
   return (<div className='app-header location-info'>
     <Tooltip title="Выбрать станцию">
-      <IconButton style={{color: "white"}}><HiOutlineMap/>
+      <IconButton style={{color: "white"}} onClick={() => {setOpenMaps(true)}}><HiOutlineMap/>
       </IconButton>
     </Tooltip>
   </div>)
 }
 
 
-function AppTitle() {
+function AppTitle({setOpenMaps}) {
   return (
   <div className='element app-header'>
     <div className='app-name'>
       <img src={reactLogo} className="App-logo" alt="logo" />
         Зарядная станция
     </div>
-    <LocationSelector/>
+    <LocationSelector
+      setOpenMaps={setOpenMaps}
+    />
   </div>)
 }
 
@@ -48,11 +47,11 @@ const backend_entrypoint = 'http://192.168.31.25:8000'
 
 export default function App() {
 
-  const map = new mapgl.Map('map-container', {
-      key: 'Your API access key',
-      center: [55.31878, 25.23584],
-      zoom: 13,
-  });
+  // const map = new mapgl.Map('map-container', {
+  //     key: 'Your API access key',
+  //     center: [55.31878, 25.23584],
+  //     zoom: 13,
+  // });
 
   const [clientId, _] = useState(
     Math.floor(new Date().getTime() / 1000)
@@ -66,12 +65,10 @@ export default function App() {
   const [currentCell, setCurrentCell] = useState(null);
   const [reloadId, setReloadId] = useState(null);
 
-  const [messages, setMessages] = useState([])
-  
   const [openPlantSuccess, setOpenPlantSuccess] = useState(false)
   const [openOpenedWarning, setOpenOpenedWarning] = useState(false)
 
-  const [openInfo, setOpenInfo] = useState(true)
+  const [openNewUserInfo, setOpenNewUserInfo] = useState(true)
   const [openDetails, setOpenDetails] = useState(false)
   const [openMaps, setOpenMaps] = useState(false)
   
@@ -140,14 +137,19 @@ export default function App() {
   const showDetails = () => setOpenDetails(true);
   const hideDetails = () => setOpenDetails(false)
 
-  if (loading) return <CircularProgress />
-
+  if (loading) return <Container>
+    <CircularProgress />
+  </Container>
+  
   return (
     <>
     <div className="App">
       <header>
-        <AppTitle/>
+        <AppTitle
+          setOpenMaps={()=>{setOpenMaps(true)}}
+        />
       </header>
+      <main>
       <div className='App-body'>
         <PowerPlant
           apiUrl={apiUrl}
@@ -156,36 +158,25 @@ export default function App() {
           reloadId={reloadId}
         />
       </div>
-      
-      {/* Popup. Успешное открытие */}
-      <Snackbar open={openPlantSuccess} autoHideDuration={6000} onClose={() => {setOpenPlantSuccess(false)}}>
-          <Alert severity="success" color="warning" onClose={() => {setOpenPlantSuccess(false)}}>
-            <AlertTitle>Ячейка открыта</AlertTitle>
-              Не забудьте закрыть ячейку
-          </Alert>
-      </Snackbar>
+      </main>
 
-      {/* Alert. Незакрытые ячейки */}
-      <Snackbar
-        open={openOpenedWarning}
-        onClose={() => {setOpenOpenedWarning(false)}}
-        message={`Авторизированы как Пользователь ${clientId}`}
-      >
-        <Alert severity="warning" color="error">
-          <AlertTitle>Закройте дверцы</AlertTitle>
-            Дверцы ячеек {openedCrates.map((indexId) => (indexId + 1)).join(', ')} не были закрыты
-        </Alert>
-
-      </Snackbar>
-
-      {/* Popup. Информация об авторизации */}
-      <Snackbar
-        open={openInfo}
-        autoHideDuration={3000}
-        onClose={() => {setOpenInfo(false)}}
-        message={`Авторизированы как Пользователь ${clientId}`}
+      <CrateOpenNotification 
+        open={openPlantSuccess}
+        onClickClose={()=>{setOpenPlantSuccess(false)}}
       />
 
+      <NewUserNotification 
+        open={openNewUserInfo}
+        onClickClose={() => {setOpenNewUserInfo(false)}}
+        clientId={clientId}
+      />
+
+      <CloseDoorNotification
+        open={openOpenedWarning}
+        onClickClose={() => {setOpenOpenedWarning(false)}}
+        doors={openedCrates}
+       />
+      
       {/* Dialog. Информация о ячейке */}
       <Dialog
         open={openDetails}
@@ -203,17 +194,18 @@ export default function App() {
 
       {/* Карта */}
       <Dialog
-        open={openDetails}
-        onClose={() => setOpenDetails(false)}
+        open={openMaps}
+        onClose={() => setOpenMaps(false)}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <PlantDetail
+        {/* <PlantDetail
         url={currentCell}
         onClickClose={hideDetails}
         onOpen={open_plant}
         socket={socket.current}
-        />
+        /> */}
+        AAA NEGRI
       </Dialog>
     </div>
     </>
