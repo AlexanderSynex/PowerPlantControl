@@ -39,3 +39,14 @@ export function CloseDoorNotification({open, onClickClose, doors}) {
     </Snackbar>
   )
 }
+
+
+{/* Popup. Ошибка открытия забронированной ячейки */}
+export function ReservedOpenFailureNotification({open, onClickClose}) {
+  return (<Snackbar open={open} autoHideDuration={6000} onClose={onClickClose}>
+      <Alert severity="error" onClose={onClickClose}>
+        <AlertTitle>Ячейка не может быть открыта</AlertTitle>
+          Аккумулятор забронирован другим пользователем
+      </Alert>
+  </Snackbar>)
+}
