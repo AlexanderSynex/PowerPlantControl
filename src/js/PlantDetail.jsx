@@ -20,7 +20,7 @@ function stateMessage(state) {
   return 'Свободна'; //empty
 }
 
-function PlantDetail({ url, onClickClose, socket, onOpen }) {
+function PlantDetail({ url, onClickClose, onOpen }) {
   const [loading, setLoading] = useState(true);
   const [id, setId] = useState(null);
   const [charge, setCharge] = useState(0);

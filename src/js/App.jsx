@@ -5,12 +5,17 @@ import '../cs/styles.css'
 import { HiOutlineMap } from "react-icons/hi";
 
 import PowerPlant from './PowerPlant'
-import PlantDetail from './PlantDetail';
 
 import { Container, Dialog, IconButton, CircularProgress } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip';
 
-import {NewUserNotification, CloseDoorNotification, CrateOpenNotification} from './Notifications'
+import { NewUserNotification, 
+         CloseDoorNotification, 
+         CrateOpenNotification, 
+         ReservedOpenFailureNotification } from './Notifications'
+import { PlantInfoDialog, MapPlantSelectDialog } from './Dialogs';
+
+import robustWebsocket from 'robust-websocket';
 
 function LocationSelector({setOpenMaps}) {
   const [location, setLocation] = useState("СПб")
@@ -43,16 +48,11 @@ function isServerEvent(message) {
 }
 
 
-const backend_entrypoint = 'http://192.168.31.25:8000'
+// const backend_entrypoint = 'http://192.168.31.25:8000'
+
+const backend_entrypoint = 'http://192.168.0.112:8000'
 
 export default function App() {
-
-  // const map = new mapgl.Map('map-container', {
-  //     key: 'Your API access key',
-  //     center: [55.31878, 25.23584],
-  //     zoom: 13,
-  // });
-
   const [clientId, _] = useState(
     Math.floor(new Date().getTime() / 1000)
   );
@@ -83,7 +83,7 @@ export default function App() {
   }
 
   useEffect(() => {
-        socket.current = new WebSocket(`${backend_entrypoint}/ws/${clientId}`);
+        socket.current = new robustWebsocket(`${backend_entrypoint}/ws/${clientId}`);
         socket.current.onopen = event => {
           socket.current.send(JSON.stringify({
             user: clientId,
@@ -91,8 +91,10 @@ export default function App() {
           }))
         };
         socket.current.onmessage = event => {
+          console.log(event)
           if (isServerEvent(event)) {
             let data = JSON.parse(event.data);
+            console.log(data)
             let action = data.action;
             if (action === 'update') {
               let plant = data.plant;
@@ -103,7 +105,6 @@ export default function App() {
             }
 
             if (action === 'notify_close') {
-              console.log(data)
               if (data.who === `${clientId}`) {
                 setOpenedCrates(data.plant);
                 setOpenOpenedWarning(true);
@@ -135,7 +136,6 @@ export default function App() {
   
 
   const showDetails = () => setOpenDetails(true);
-  const hideDetails = () => setOpenDetails(false)
 
   if (loading) return <Container>
     <CircularProgress />
@@ -176,37 +176,18 @@ export default function App() {
         onClickClose={() => {setOpenOpenedWarning(false)}}
         doors={openedCrates}
        />
-      
-      {/* Dialog. Информация о ячейке */}
-      <Dialog
-        open={openDetails}
-        onClose={() => setOpenDetails(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <PlantDetail
-        url={currentCell}
-        onClickClose={hideDetails}
-        onOpen={open_plant}
-        socket={socket.current}
-        />
-      </Dialog>
 
-      {/* Карта */}
-      <Dialog
+      <PlantInfoDialog 
+        open={openDetails}
+        cell={currentCell}
+        onClickClose={() => setOpenDetails(false)}
+        onPlantOpen={open_plant}
+      />
+
+      <MapPlantSelectDialog 
         open={openMaps}
-        onClose={() => setOpenMaps(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        {/* <PlantDetail
-        url={currentCell}
-        onClickClose={hideDetails}
-        onOpen={open_plant}
-        socket={socket.current}
-        /> */}
-        AAA NEGRI
-      </Dialog>
+        onClickClose={() => setOpenMaps(false)}
+      />
     </div>
     </>
   )

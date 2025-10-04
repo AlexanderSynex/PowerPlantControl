@@ -38,7 +38,7 @@ function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadId}) {
                 setCharging(data.status === 'charging');
             })
             .catch(error => console.error('Error fetching layer config:', error)))
-        }, [color, status,reloadId]);
+        }, [color, status, reloadId]);
 
     const handleClick = () => {
         setCellApiUrl(url);

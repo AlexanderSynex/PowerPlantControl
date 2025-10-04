@@ -96,11 +96,11 @@ html, body, #root {
 .plant-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
     position: absolute;
     justify-content: center;
+    align-items: center;
     height: min(80%, 80vh);
-    width: 60vw;
+    width: max(60vw, 200px);
     gap: 10px;
 }
 
