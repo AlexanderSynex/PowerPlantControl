@@ -120,8 +120,7 @@ export function MapPlantSelectDialog({ url, open, onClickClose }) {
         {plants.map((plant, id) => (
           <ListItem
             disableGutters
-            key={plant.coords}
-            secondaryAction={() => {console.log()}}
+            key={plant.coords}  
             sx={{
               px: 2, // Add horizontal padding
               py: 1.5, // Add vertical padding

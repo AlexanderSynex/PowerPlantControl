@@ -6,7 +6,7 @@ import { HiOutlineMap } from "react-icons/hi";
 
 import PowerPlant from './PowerPlant'
 
-import { Container, Dialog, IconButton, CircularProgress, Typography } from '@mui/material'
+import { Container, Dialog, IconButton, CircularProgress, Typography, AppBar, Box, Backdrop } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip';
 
 import { NewUserNotification, 
@@ -15,36 +15,39 @@ import { NewUserNotification,
          ReservedOpenFailureNotification } from './Notifications'
 import { PlantInfoDialog, MapPlantSelectDialog } from './Dialogs';
 
-import { io } from 'socket.io-client';
-
-function LocationSelector({setOpenMaps}) {
-  const [location, setLocation] = useState("СПб")
-
-  return (<div className='app-header location-info'>
-    <Tooltip title="Выбрать станцию">
-      <IconButton style={{color: "white"}} onClick={() => {setOpenMaps(true)}}><HiOutlineMap/>
-      </IconButton>
-    </Tooltip>
-  </div>)
-}
-
-
 function AppTitle({setOpenMaps, address}) {
   return (
-  <div className='element app-header'>
-    <div className='app-name'>
-      <img src={reactLogo} className="App-logo" alt="logo" />
-      <div>
-      <Typography alignItems={'flex-start'}>
-        Зарядная станция
-      </Typography>
-      {address}
-      </div>
-    </div>
-    <LocationSelector
-      setOpenMaps={setOpenMaps}
-    />
-  </div>)
+  <AppBar sx={{ position: 'relative', py: 1}}>
+    <Box sx={{
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'space-between',
+      width: '100%'
+    }}>
+      <Box sx={{ 
+        display: 'flex', 
+        alignItems: 'center',
+      }}>
+        <img src={reactLogo} className="App-logo" alt="logo" />
+        <div>
+          <Typography sx={{ flex: 1 }} variant="h5" component="div">
+            Зарядная станция
+          </Typography>
+          <Typography variant="caption" component="div" sx={{ lineHeight: 1, opacity: 0.8 }}>
+            {address}
+          </Typography>
+        </div>
+      </Box>
+      <Tooltip title="Выбрать станцию">
+      <IconButton 
+        color="inherit" 
+        onClick={() => { setOpenMaps(true) }}
+      >
+        <HiOutlineMap />
+      </IconButton>
+    </Tooltip>
+    </Box>
+  </AppBar>)
 }
 
 function isServerEvent(message) {
@@ -53,9 +56,9 @@ function isServerEvent(message) {
 }
 
 
-// const backend_entrypoint = 'http://192.168.31.25:8000'
+const backend_entrypoint = 'http://192.168.31.25:8000'
 
-const backend_entrypoint = 'http://127.0.0.1:8000'
+// const backend_entrypoint = 'http://127.0.0.1:8000'
 
 export default function App() {
   const [clientId, _] = useState(
@@ -67,7 +70,6 @@ export default function App() {
   const [mapsUrl, setMapsUrl] = useState(null)
   const socket = useRef(null);
   const [loading, setLoading] = useState(true);
-  const [isDetailsOpen, setDetailsOpen] = useState(false);
   const [currentCell, setCurrentCell] = useState(null);
   const [reloadId, setReloadId] = useState(null);
   const [update, setUpdate] = useState(false);
@@ -97,7 +99,7 @@ export default function App() {
           socket.current.send(JSON.stringify({
             user: clientId,
             action: "connect"
-          }))
+          })) 
         };
         socket.current.onmessage = event => {
           console.log(event)
@@ -148,17 +150,22 @@ export default function App() {
 
   const showDetails = () => setOpenDetails(true);
 
-  if (loading) return <Container>
-    <CircularProgress />
-  </Container>
+  if (loading) return <Backdrop
+    sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+    open={loading}
+  >
+    <CircularProgress color="inherit" />
+  </Backdrop>
   
+  
+
   return (
     <>
     <div className="App">
       <header>
         <AppTitle
           setOpenMaps={()=>{setOpenMaps(true)}}
-          address={'aaa'}
+          address={'Улица 1'}
         />
       </header>
       <main>
