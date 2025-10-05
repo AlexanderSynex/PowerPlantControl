@@ -58,8 +58,6 @@ function isServerEvent(message) {
 
 const backend_entrypoint = 'http://192.168.31.25:8000'
 
-// const backend_entrypoint = 'http://127.0.0.1:8000'
-
 export default function App() {
   const [clientId, _] = useState(
     Math.floor(new Date().getTime() / 1000)
@@ -172,8 +170,7 @@ export default function App() {
         />
       </header>
       <main>
-      <div className='App'>
-        <div className='App-body'>
+      <div className='App App-body'>
           <PowerPlant
             apiUrl={apiUrl}
             setCellApiUrl={setCurrentCell}
@@ -182,7 +179,6 @@ export default function App() {
             update={update}
             onUpdated={onUpdated}
           />
-        </div>
       </div>
       </main>
 

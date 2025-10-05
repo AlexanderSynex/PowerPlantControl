@@ -16,3 +16,14 @@
 body {
   margin: 0pt;
 }
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+header {
+    flex-shrink: 0; /* Prevent header from shrinking */
+    z-index: 1000;
+}
