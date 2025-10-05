@@ -65,6 +65,8 @@ export default function App() {
     Math.floor(new Date().getTime() / 1000)
   );
 
+  const [address, setAddress] = useState(null);
+
   const [apiUrl, setApiUrl] = useState(null);
   const [socketUrl, setSocketUrl] = useState(null);
   const [mapsUrl, setMapsUrl] = useState(null)
@@ -141,6 +143,7 @@ export default function App() {
             setApiUrl(data.api);
             setSocketUrl(data.socket);
             setMapsUrl(data.locations)
+            setAddress(data.address);
             setLoading(false);
         })
         .catch(error => console.error('Error fetching config:', error)));
@@ -165,19 +168,21 @@ export default function App() {
       <header>
         <AppTitle
           setOpenMaps={()=>{setOpenMaps(true)}}
-          address={'Улица 1'}
+          address={address}
         />
       </header>
       <main>
-      <div className='App-body'>
-        <PowerPlant
-          apiUrl={apiUrl}
-          setCellApiUrl={setCurrentCell}
-          onDisplayDetails={showDetails}
-          reloadId={reloadId}
-          update={update}
-          onUpdated={onUpdated}
-        />
+      <div className='App'>
+        <div className='App-body'>
+          <PowerPlant
+            apiUrl={apiUrl}
+            setCellApiUrl={setCurrentCell}
+            onDisplayDetails={showDetails}
+            reloadId={reloadId}
+            update={update}
+            onUpdated={onUpdated}
+          />
+        </div>
       </div>
       </main>
 
