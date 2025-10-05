@@ -1,14 +1,30 @@
-import List from '@mui/material/List';
-import { ListItem, ListItemText, Typography } from '@mui/material';
 
-import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
-import React from 'react';
+import { YMaps, Map, Placemark, ZoomControl } from '@pbe/react-yandex-maps';
 
-export function MapSelector({url}) {
-  console.log(url)
+const working_plant_color = '#001effff';
+const closed_plant_color = '#bbbbbb';
+
+export function MapSelector({ plants }) {
 
   return (
-    <>
-      
-    </>)
+    <YMaps>
+      <Map
+        defaultState={{
+          center: [59.938886, 30.313838],
+          zoom: 10,
+        }}
+        width='100%'
+        height="50vh"
+      >
+        {plants.map((point, index) =>
+        (<Placemark
+          key={index}
+          defaultGeometry={point.coords}
+          options={{ iconColor: point.opened ? working_plant_color : closed_plant_color }}
+        />))
+        }
+        <ZoomControl />
+      </Map>
+    </YMaps>
+  )
 }
