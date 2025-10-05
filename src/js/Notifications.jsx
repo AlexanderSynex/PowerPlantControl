@@ -50,3 +50,14 @@ export function ReservedOpenFailureNotification({open, onClickClose}) {
       </Alert>
   </Snackbar>)
 }
+
+
+{/* Popup. Потеряно соединение */}
+export function ConnectionLostNotification({open}) {
+  return (<Snackbar open={open}>
+      <Alert severity="error">
+        <AlertTitle>Потеряно соединение с сервером</AlertTitle>
+          Пытаемся восстановить подключение
+      </Alert>
+  </Snackbar>)
+}

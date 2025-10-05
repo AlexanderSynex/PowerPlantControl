@@ -6,7 +6,7 @@ import { HiOutlineMap } from "react-icons/hi";
 
 import PowerPlant from './PowerPlant'
 
-import { Container, Dialog, IconButton, CircularProgress } from '@mui/material'
+import { Container, Dialog, IconButton, CircularProgress, Typography } from '@mui/material'
 import Tooltip from '@mui/material/Tooltip';
 
 import { NewUserNotification, 
@@ -15,7 +15,7 @@ import { NewUserNotification,
          ReservedOpenFailureNotification } from './Notifications'
 import { PlantInfoDialog, MapPlantSelectDialog } from './Dialogs';
 
-import robustWebsocket from 'robust-websocket';
+import { io } from 'socket.io-client';
 
 function LocationSelector({setOpenMaps}) {
   const [location, setLocation] = useState("СПб")
@@ -29,12 +29,17 @@ function LocationSelector({setOpenMaps}) {
 }
 
 
-function AppTitle({setOpenMaps}) {
+function AppTitle({setOpenMaps, address}) {
   return (
   <div className='element app-header'>
     <div className='app-name'>
       <img src={reactLogo} className="App-logo" alt="logo" />
+      <div>
+      <Typography alignItems={'flex-start'}>
         Зарядная станция
+      </Typography>
+      {address}
+      </div>
     </div>
     <LocationSelector
       setOpenMaps={setOpenMaps}
@@ -50,7 +55,7 @@ function isServerEvent(message) {
 
 // const backend_entrypoint = 'http://192.168.31.25:8000'
 
-const backend_entrypoint = 'http://192.168.0.112:8000'
+const backend_entrypoint = 'http://127.0.0.1:8000'
 
 export default function App() {
   const [clientId, _] = useState(
@@ -59,11 +64,13 @@ export default function App() {
 
   const [apiUrl, setApiUrl] = useState(null);
   const [socketUrl, setSocketUrl] = useState(null);
+  const [mapsUrl, setMapsUrl] = useState(null)
   const socket = useRef(null);
   const [loading, setLoading] = useState(true);
   const [isDetailsOpen, setDetailsOpen] = useState(false);
   const [currentCell, setCurrentCell] = useState(null);
   const [reloadId, setReloadId] = useState(null);
+  const [update, setUpdate] = useState(false);
 
   const [openPlantSuccess, setOpenPlantSuccess] = useState(false)
   const [openOpenedWarning, setOpenOpenedWarning] = useState(false)
@@ -74,6 +81,8 @@ export default function App() {
   
   const [openedCrates, setOpenedCrates] = useState([])
 
+  const onUpdated = () => setUpdate(false)
+
   const open_plant = (id) => {
     socket.current.send(JSON.stringify({
       user: clientId,
@@ -83,7 +92,7 @@ export default function App() {
   }
 
   useEffect(() => {
-        socket.current = new robustWebsocket(`${backend_entrypoint}/ws/${clientId}`);
+        socket.current = new WebSocket(`${backend_entrypoint}/ws/${clientId}`);
         socket.current.onopen = event => {
           socket.current.send(JSON.stringify({
             user: clientId,
@@ -99,6 +108,7 @@ export default function App() {
             if (action === 'update') {
               let plant = data.plant;
               setReloadId(plant);
+              setUpdate(true)
               if (data.who === `${clientId}`) {
                 setOpenPlantSuccess(true);
               }
@@ -128,6 +138,7 @@ export default function App() {
         .then(data => {
             setApiUrl(data.api);
             setSocketUrl(data.socket);
+            setMapsUrl(data.locations)
             setLoading(false);
         })
         .catch(error => console.error('Error fetching config:', error)));
@@ -147,6 +158,7 @@ export default function App() {
       <header>
         <AppTitle
           setOpenMaps={()=>{setOpenMaps(true)}}
+          address={'aaa'}
         />
       </header>
       <main>
@@ -156,6 +168,8 @@ export default function App() {
           setCellApiUrl={setCurrentCell}
           onDisplayDetails={showDetails}
           reloadId={reloadId}
+          update={update}
+          onUpdated={onUpdated}
         />
       </div>
       </main>
@@ -185,6 +199,7 @@ export default function App() {
       />
 
       <MapPlantSelectDialog 
+        url={mapsUrl}
         open={openMaps}
         onClickClose={() => setOpenMaps(false)}
       />

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "../cs/styles.css"
 import PowerLayer from "./PowerLayer";
 
-function PowerPlant({apiUrl, onDisplayDetails, setCellApiUrl,reloadId}) {
+function PowerPlant({apiUrl, onDisplayDetails, setCellApiUrl,reloadId,update,onUpdated}) {
     const [layers, setLayers] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -29,6 +29,8 @@ function PowerPlant({apiUrl, onDisplayDetails, setCellApiUrl,reloadId}) {
                     setCellApiUrl={setCellApiUrl}
                     reloadTrigger={true}
                     reloadId={reloadId}
+                    update={update}
+                    onUpdated={onUpdated}
                 />
             ))}
         </div>
