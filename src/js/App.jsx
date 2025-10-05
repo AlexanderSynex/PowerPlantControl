@@ -170,8 +170,7 @@ export default function App() {
         />
       </header>
       <main>
-        <div className='App'>
-        <div className='App-body'>
+        <div className='App App-body'>
           <PowerPlant
             apiUrl={apiUrl}
             setCellApiUrl={setCurrentCell}
@@ -180,7 +179,6 @@ export default function App() {
             update={update}
             onUpdated={onUpdated}
           />
-          </div>
         </div>
       </main>
 
