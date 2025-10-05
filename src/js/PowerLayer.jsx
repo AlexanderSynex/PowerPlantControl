@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import "../cs/styles.css"
 
 import PowerCell from "./PowerCell";
+import { CircularProgress } from "@mui/material";
 
 function PowerLayer({url, onDisplayDetails, setCellApiUrl, reloadId,update, onUpdated}) {
     const [batteries, setBatteries] = useState(null);
@@ -18,7 +19,7 @@ function PowerLayer({url, onDisplayDetails, setCellApiUrl, reloadId,update, onUp
         .catch(error => console.error('Error fetching layer config:', error)))
     }, []);
 
-    if (loading) return <div>Loading layers...</div>
+    if (loading) return <div className='plant-layer'><CircularProgress/></div>
 
     return (
         <div className='plant-layer'>
