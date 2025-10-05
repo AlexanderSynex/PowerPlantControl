@@ -17,7 +17,7 @@ import { PlantInfoDialog, MapPlantSelectDialog } from './Dialogs';
 
 function AppTitle({setOpenMaps, address}) {
   return (
-  <AppBar sx={{ position: 'relative', py: 1}}>
+  <AppBar sx={{ position: 'static', py: 1}}>
     <Box sx={{
       display: 'flex', 
       alignItems: 'center', 
@@ -27,6 +27,7 @@ function AppTitle({setOpenMaps, address}) {
       <Box sx={{ 
         display: 'flex', 
         alignItems: 'center',
+        justifyContent: 'center'
       }}>
         <img src={reactLogo} className="App-logo" alt="logo" />
         <div>
@@ -162,7 +163,6 @@ export default function App() {
 
   return (
     <>
-    <div className="App">
       <header>
         <AppTitle
           setOpenMaps={()=>{setOpenMaps(true)}}
@@ -170,7 +170,8 @@ export default function App() {
         />
       </header>
       <main>
-      <div className='App App-body'>
+        <div className='App'>
+        <div className='App-body'>
           <PowerPlant
             apiUrl={apiUrl}
             setCellApiUrl={setCurrentCell}
@@ -179,7 +180,8 @@ export default function App() {
             update={update}
             onUpdated={onUpdated}
           />
-      </div>
+          </div>
+        </div>
       </main>
 
       <CrateOpenNotification 
@@ -211,7 +213,6 @@ export default function App() {
         open={openMaps}
         onClickClose={() => setOpenMaps(false)}
       />
-    </div>
     </>
   )
 }
