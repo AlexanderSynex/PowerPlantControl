@@ -60,9 +60,8 @@ function isServerEvent(message) {
   const parsedMessage = JSON.parse(message.data);
   return parsedMessage.type === "server"; 
 }
-
-
-const backend_entrypoint = 'http://192.168.1.52:8000'
+console.log(import.meta.env.VITE_API_HOST)
+const backend_entrypoint = import.meta.env.VITE_API_HOST;
 
 export default function App() {
   const [clientId, _] = useState(
