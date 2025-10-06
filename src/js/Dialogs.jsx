@@ -133,7 +133,7 @@ export function MapPlantSelectDialog({ url, open, onClickClose }) {
           >
             <ListItemText
               primary={
-                <Typography variant="subtitle1" fontWeight="medium">
+                <Typography variant="subtitle1" fontWeight="bold">
                   {plant.address}
                 </Typography>
               }
@@ -142,13 +142,18 @@ export function MapPlantSelectDialog({ url, open, onClickClose }) {
                   <Box 
                     component="span" 
                     sx={{ 
-                      color: plant.opened ? '#009d00' : '#ff0000',
+                      color: plant.opened ? '#009d00' : '#001effff',
                       fontWeight: 'medium',
                     }}
                   >
-                    {plant.opened ? `Открыта` : `Закрыта`}
+                    {plant.opened ? `Доступна` : `Скоро открытие`}
                   </Box>
-                  <Box component="span" sx={{ display: 'block', mt: 0.5 }}>
+                  <Box 
+                    component="span" 
+                    sx={{ 
+                      display: 'block', 
+                      mt: 0.5 
+                  }}>
                     {plant.work_from} - {plant.work_to}
                   </Box>
                 </>
