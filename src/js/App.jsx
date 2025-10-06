@@ -6,11 +6,16 @@ import { HiOutlineMap } from "react-icons/hi";
 
 import PowerPlant from './PowerPlant'
 
-import { Container, Dialog, IconButton, CircularProgress, Typography, AppBar, Box, Backdrop } from '@mui/material'
+import IconButton from '@mui/material/IconButton';
+import CircularProgress from '@mui/material/CircularProgress'
+import Typography from '@mui/material/Typography'
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Backdrop from '@mui/material/Backdrop'
+
 import Tooltip from '@mui/material/Tooltip';
 
-import { NewUserNotification, 
-         CloseDoorNotification, 
+import { CloseDoorNotification, 
          CrateOpenNotification, 
          ReservedOpenFailureNotification } from './Notifications'
 import { PlantInfoDialog, MapPlantSelectDialog } from './Dialogs';
@@ -53,11 +58,11 @@ function AppTitle({setOpenMaps, address}) {
 
 function isServerEvent(message) {
   const parsedMessage = JSON.parse(message.data);
-  return parsedMessage.type === "server";
+  return parsedMessage.type === "server"; 
 }
 
 
-const backend_entrypoint = 'http://192.168.31.25:8000'
+const backend_entrypoint = 'http://192.168.1.52:8000'
 
 export default function App() {
   const [clientId, _] = useState(
@@ -72,7 +77,6 @@ export default function App() {
   const socket = useRef(null);
   const [loading, setLoading] = useState(true);
   const [currentCell, setCurrentCell] = useState(null);
-  const [reloadId, setReloadId] = useState(null);
   const [update, setUpdate] = useState(false);
 
   const [openPlantSuccess, setOpenPlantSuccess] = useState(false)
@@ -133,7 +137,7 @@ export default function App() {
         return () => {
             wsCurrent.close();
         };
-    }, []);
+    }, [socket]);
 
   useEffect(() => {
         fetch(backend_entrypoint)  // Replace with your config endpoint
@@ -175,7 +179,6 @@ export default function App() {
             apiUrl={apiUrl}
             setCellApiUrl={setCurrentCell}
             onDisplayDetails={showDetails}
-            reloadId={reloadId}
             update={update}
             onUpdated={onUpdated}
           />
@@ -185,12 +188,6 @@ export default function App() {
       <CrateOpenNotification 
         open={openPlantSuccess}
         onClickClose={()=>{setOpenPlantSuccess(false)}}
-      />
-
-      <NewUserNotification 
-        open={openNewUserInfo}
-        onClickClose={() => {setOpenNewUserInfo(false)}}
-        clientId={clientId}
       />
 
       <CloseDoorNotification

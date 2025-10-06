@@ -5,7 +5,7 @@ import "../cs/styles.css"
 import PowerCell from "./PowerCell";
 import { CircularProgress } from "@mui/material";
 
-function PowerLayer({url, onDisplayDetails, setCellApiUrl, reloadId,update, onUpdated}) {
+function PowerLayer({url, onDisplayDetails, setCellApiUrl, update, onUpdated}) {
     const [batteries, setBatteries] = useState(null);
     const [loading, setLoading] = useState(true)
 
@@ -29,7 +29,6 @@ function PowerLayer({url, onDisplayDetails, setCellApiUrl, reloadId,update, onUp
                     url={battery}
                     onDisplayDetails={onDisplayDetails}
                     setCellApiUrl={setCellApiUrl}
-                    reloadId={reloadId}
                     update={update}
                     onUpdated={onUpdated}
                 />

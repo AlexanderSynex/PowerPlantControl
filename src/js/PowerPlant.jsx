@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import "../cs/styles.css"
 import PowerLayer from "./PowerLayer";
+import { Backdrop, CircularProgress } from "@mui/material";
 
-function PowerPlant({ apiUrl, onDisplayDetails, setCellApiUrl, reloadId, update, onUpdated }) {
+function PowerPlant({ apiUrl, onDisplayDetails, setCellApiUrl, update, onUpdated }) {
   const [layers, setLayers] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -15,9 +16,14 @@ function PowerPlant({ apiUrl, onDisplayDetails, setCellApiUrl, reloadId, update,
           setLoading(false);
         })
         .catch(error => console.error('Error fetching config:', error)));
-  }, [reloadId]);
+  }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Backdrop
+    sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+    open={loading}
+  >
+    <CircularProgress color="inherit" />
+  </Backdrop>;
 
   return (
     <div className="plant-container">
@@ -27,7 +33,6 @@ function PowerPlant({ apiUrl, onDisplayDetails, setCellApiUrl, reloadId, update,
           url={layerApi}
           onDisplayDetails={onDisplayDetails}
           setCellApiUrl={setCellApiUrl}
-          reloadId={reloadId}
           update={update}
           onUpdated={onUpdated}
         />

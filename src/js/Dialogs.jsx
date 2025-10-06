@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 
 import List from '@mui/material/List';
-import { Box, Dialog, DialogContent, DialogTitle, Typography, ListItem, ListItemText, Container, DialogActions, IconButton, Paper, Toolbar, AppBar } from '@mui/material'
+import Box from '@mui/material/Box'
+import { Dialog, DialogContent, Typography, ListItem, ListItemText, IconButton, Paper, Toolbar, AppBar, CircularProgress, Backdrop } from '@mui/material'
 
 import PlantDetail from './PlantDetail'
 
-import { YMaps, Map, Placemark, ZoomControl, GeolocationControl } from '@pbe/react-yandex-maps';
-
-import React from "react";
 import { MapSelector } from "./MapSelector";
 import { IoCloseOutline } from "react-icons/io5";
 
@@ -36,22 +34,25 @@ export function PlantInfoDialog({ open, onClickClose, cell, onPlantOpen }) {
 {/* Карта */ }
 export function MapPlantSelectDialog({ url, open, onClickClose }) {
   const [plants, setPlants] = useState([]);
-  const [current, setCurrent] = useState(null);
+  const [current, setCurrent] = useState([55.753625, 37.625882]);
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     fetch(url)
     .then(response => response.json().then((data) => {
       setPlants(data.locations)
-      setCurrent(data.current)
-      console.log(url, current);
+      setCurrent(data.current.coords)
     }))
     .finally(setLoading(false));
-  },[current])
-  if (loading) return <div>Loading...</div>
+  },[])
+  if (loading) return <Backdrop
+    sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+    open={loading}
+  >
+    <CircularProgress color="inherit" />
+  </Backdrop>
   return (
 <Dialog
   fullScreen
-  keepMounted
   open={open}
   onClose={onClickClose}
   aria-labelledby="alert-dialog-title"
@@ -126,7 +127,7 @@ export function MapPlantSelectDialog({ url, open, onClickClose }) {
         {plants.map((plant, id) => (
           <ListItem
             disableGutters
-            key={plant.coords}  
+            key={plant.coords}
             sx={{
               px: 2, // Add horizontal padding
               py: 1.5, // Add vertical padding

@@ -18,7 +18,7 @@ function stateToColor(state) {
     }
 }
 
-function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadId,update, onUpdated}) {
+function PowerCell({url, onDisplayDetails, setCellApiUrl, update, onUpdated}) {
     const [color, setColor] = useState(basic_fill);
     const [status, setStatus] = useState('disabled');
     const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadId,update, onUpd
                 onUpdated();
             })
             .catch(error => console.error('Error fetching layer config:', error)))
-        }, [color, status,reloadId,update]);
+        }, [color, status, update]);
     
     const handleClick = () => {
         setCellApiUrl(url);
@@ -50,11 +50,11 @@ function PowerCell({url, onDisplayDetails, setCellApiUrl, reloadId,update, onUpd
 
     return (
         <div 
-            className='element plant-cell' 
+            className='element centered plant-cell' 
             onClick={handleClick}
             style={{backgroundColor: `${color}`, display: 'flex', alignItems: 'center', justifyContent: 'center'}}
             >
-        {opened ? <FaLockOpen/> : <FaLock/>}<br/>
+        {opened ? <FaLockOpen/> : <FaLock/>}
         {charging ? <RiBattery2ChargeLine /> : null}
         </div>
     );
