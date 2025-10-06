@@ -36,13 +36,18 @@ export function PlantInfoDialog({ open, onClickClose, cell, onPlantOpen }) {
 {/* Карта */ }
 export function MapPlantSelectDialog({ url, open, onClickClose }) {
   const [plants, setPlants] = useState([]);
+  const [current, setCurrent] = useState(null);
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     fetch(url)
     .then(response => response.json().then((data) => {
       setPlants(data.locations)
-    }));
-  },[])
-
+      setCurrent(data.current)
+      console.log(url, current);
+    }))
+    .finally(setLoading(false));
+  },[current])
+  if (loading) return <div>Loading...</div>
   return (
 <Dialog
   fullScreen
@@ -83,6 +88,7 @@ export function MapPlantSelectDialog({ url, open, onClickClose }) {
       flexShrink: 0, // Prevent shrinking
     }}>
       <MapSelector
+        current={current}
         plants={plants}
       />
     </Box>
