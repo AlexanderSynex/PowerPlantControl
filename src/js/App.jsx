@@ -113,8 +113,6 @@ export default function App() {
             console.log(data)
             let action = data.action;
             if (action === 'update') {
-              let plant = data.plant;
-              setReloadId(plant);
               setUpdate(true)
               if (data.who === `${clientId}`) {
                 setOpenPlantSuccess(true);

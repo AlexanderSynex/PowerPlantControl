@@ -22,7 +22,7 @@ function PowerLayer({url, onDisplayDetails, setCellApiUrl, update, onUpdated}) {
     if (loading) return <div className='plant-layer'><CircularProgress/></div>
 
     return (
-        <div className='plant-layer'>
+        <div className='centered plant-layer'>
             {batteries.map((battery, i) => (
                 <PowerCell
                     key={i}

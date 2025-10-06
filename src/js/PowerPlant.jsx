@@ -26,7 +26,7 @@ function PowerPlant({ apiUrl, onDisplayDetails, setCellApiUrl, update, onUpdated
   </Backdrop>;
 
   return (
-    <div className="plant-container">
+    <div className="centered plant-container">
       {layers.map((layerApi, i) => (
         <PowerLayer
           key={i}

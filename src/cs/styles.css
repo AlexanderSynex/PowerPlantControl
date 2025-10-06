@@ -19,7 +19,7 @@
 
 .App-body {
   display: flex;
-  padding: 10px;
+  margin: ;
   flex: auto;
   justify-content: center;
   align-items: baseline;
@@ -35,23 +35,25 @@
   }
 }
 
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .element {
   font-family: Arial, sans-serif;
 }
 
 .plant-cell {
-  border: 2px solid black;
+  border: 1px solid black;
   height: inherit;
   width: 100%;
-  height: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
   cursor: pointer;
   color: black;
-  /* font-size: calc(10px + 2vmin); */
-  /* position: relative; */
-  /* overflow: hidden; */
+  border-radius: 8px;
+  font-size: calc(10px + 2vmin);
 }
 
 
@@ -67,21 +69,14 @@
     gap: 10px;
     width: 100%;
     height: 100%;
-    justify-content: center;
-    align-items: center;
-    /* min-height: 0; Important for flex children */
+    min-height: 0; /* Important for flex children
     /* overflow: hidden; */
 }
 
 .plant-container {
-    border: 2px solid rgb(0, 0, 0);
-    background-color: gray;
-    display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 60vh;
-    width: 70vw;
+    height: 75vh;
+    width: 100vw;
     padding: 10px;
     gap: 10px;
 }

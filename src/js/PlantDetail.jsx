@@ -8,7 +8,8 @@ import {
   DialogContentText, 
   DialogTitle, 
   DialogActions,
-  CircularProgress } from '@mui/material'
+  CircularProgress, 
+  Tooltip} from '@mui/material'
 
 
 function stateMessage(state) {
@@ -25,8 +26,11 @@ function PlantDetail({ url, onClickClose, onOpen }) {
   const [id, setId] = useState(null);
   const [charge, setCharge] = useState(0);
   const [status, setStatus] = useState(null);
+  const [voltage, setVoltage] = useState(null);
   const [reserved, setReserved] = useState(false);
   const [opened, setOpened] = useState(false);
+  const [controllable, setControllable] = useState(false)
+      
 
   useEffect(() => {
     fetch(url)  // Replace with your config endpoint
@@ -35,10 +39,12 @@ function PlantDetail({ url, onClickClose, onOpen }) {
           setStatus(data.status);
           setId(data.id);
           setCharge(data.charge);
-          setLoading(false);
           setReserved(data.reserved)
           setOpened(data.opened)
+          setVoltage(data.voltage)
+          setControllable(data.controllable)
         })
+        .finally(() => setLoading(false))
         .catch(error => console.error('Error fetching plant details:', error)));
   }, []);
 
@@ -53,7 +59,7 @@ function PlantDetail({ url, onClickClose, onOpen }) {
 
   return (<div>
     <DialogTitle id="alert-dialog-title">
-      {`Зарядная станция ${id + 1}`}
+      {`Зарядная ячейка №${id + 1}`}
     </DialogTitle>
     <DialogContent>
       <DialogContentText id="alert-dialog-description">
@@ -62,6 +68,12 @@ function PlantDetail({ url, onClickClose, onOpen }) {
       <DialogContentText id="alert-dialog-description">
         Заряд: <b>{charge}%</b>
       </DialogContentText>
+      {voltage > 0 ? 
+      <DialogContentText id="alert-dialog-description">
+        Напряжение: <b>{voltage}%</b>
+      </DialogContentText>
+      : null
+      }
       {reserved ?
         <DialogContentText id="alert-dialog-description">
           Ячейка зарезервирована
@@ -75,6 +87,7 @@ function PlantDetail({ url, onClickClose, onOpen }) {
         <Button
           onClick={handleAcceptClose}
           variant='contained'
+          disabled={!controllable | reserved}
         >
           Открыть
         </Button>
