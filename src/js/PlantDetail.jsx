@@ -87,7 +87,7 @@ function PlantDetail({ url, onClickClose, onOpen }) {
         <Button
           onClick={handleAcceptClose}
           variant='contained'
-          disabled={!controllable | reserved}
+          disabled={!controllable || reserved}
         >
           Открыть
         </Button>

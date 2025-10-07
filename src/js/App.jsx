@@ -60,7 +60,6 @@ function isServerEvent(message) {
   const parsedMessage = JSON.parse(message.data);
   return parsedMessage.type === "server"; 
 }
-console.log(import.meta.env.VITE_API_HOST)
 const backend_entrypoint = import.meta.env.VITE_API_HOST;
 
 export default function App() {
