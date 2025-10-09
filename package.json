@@ -13,14 +13,18 @@
     "@2gis/mapgl": "^1.65.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@material-tailwind/react": "^2.1.10",
     "@mui/material": "^7.3.2",
     "@pbe/react-yandex-maps": "^1.2.5",
+    "@tailwindcss/vite": "^4.1.14",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",
+    "react-router-dom": "^7.9.4",
     "robust-websocket": "^1.0.0",
     "socket.io": "^4.8.1",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "tailwindcss": "^4.1.14"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

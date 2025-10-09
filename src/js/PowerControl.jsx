@@ -16,9 +16,10 @@ import Backdrop from '@mui/material/Backdrop'
 import Tooltip from '@mui/material/Tooltip';
 
 import { CloseDoorNotification, 
-         CrateOpenNotification, 
-         ReservedOpenFailureNotification } from './Notifications'
+         CrateOpenNotification } from './Notifications'
 import { PlantInfoDialog, MapPlantSelectDialog } from './Dialogs';
+import NoAccess from './NoAccess';
+import { useSearchParams } from 'react-router-dom';
 
 function AppTitle({setOpenMaps, address}) {
   return (
@@ -62,10 +63,14 @@ function isServerEvent(message) {
 }
 const backend_entrypoint = import.meta.env.VITE_API_HOST;
 
-export default function App() {
-  const [clientId, _] = useState(
-    Math.floor(new Date().getTime() / 1000)
-  );
+export default function PowerControl({authorized = true}) {
+  // const [searchParams] = useSearchParams();
+  // const clientId = searchParams.get('session'); 
+  // console.log(clientId);
+  
+  const clientId = '1';
+
+  if (!authorized) return <NoAccess/>;
 
   const [address, setAddress] = useState(null);
 
@@ -78,9 +83,8 @@ export default function App() {
   const [update, setUpdate] = useState(false);
 
   const [openPlantSuccess, setOpenPlantSuccess] = useState(false)
-  const [openOpenedWarning, setOpenOpenedWarning] = useState(false)
-
-  const [openNewUserInfo, setOpenNewUserInfo] = useState(true)
+  const [openOpenedWarning, setOpenOpenedWarning] = useState(false) 
+  
   const [openDetails, setOpenDetails] = useState(false)
   const [openMaps, setOpenMaps] = useState(false)
   
@@ -158,8 +162,6 @@ export default function App() {
   >
     <CircularProgress color="inherit" />
   </Backdrop>
-  
-  
 
   return (
     <>

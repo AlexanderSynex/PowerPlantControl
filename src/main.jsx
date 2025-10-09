@@ -1,10 +1,18 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './cs/index.css'
-import App from './js/App.jsx'
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import PowerControl from './js/PowerControl';
+import Auth from './js/Auth';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <Router>
+      <Routes>
+        <Route path="/" element={ <PowerControl /> }  />
+        <Route path="/auth" element={ <Auth/> } />
+      </Routes>
+    </Router>
   </StrictMode>,
 )
