@@ -11,7 +11,7 @@
 }
 
 .App {
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   color: white;
   background-color: #d5d9da;
@@ -19,7 +19,6 @@
 
 .App-body {
   display: flex;
-  margin: ;
   flex: auto;
   justify-content: center;
   align-items: baseline;
@@ -75,8 +74,8 @@
 
 .plant-container {
     flex-direction: column;
-    height: 75vh;
-    width: 100vw;
+    height: 75dvb;
+    width: 80vw;
     padding: 10px;
     gap: 10px;
 }

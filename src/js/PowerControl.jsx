@@ -64,11 +64,10 @@ function isServerEvent(message) {
 const backend_entrypoint = import.meta.env.VITE_API_HOST;
 
 export default function PowerControl({authorized = true}) {
-  // const [searchParams] = useSearchParams();
-  // const clientId = searchParams.get('session'); 
-  // console.log(clientId);
+  const [clientId, setClientId] = useState(null)
+  useEffect(()=>{setClientId(history.state.session), console.log(history.state.session)}, [authorized]);
   
-  const clientId = '1';
+  console.log(clientId)
 
   if (!authorized) return <NoAccess/>;
 
@@ -84,7 +83,7 @@ export default function PowerControl({authorized = true}) {
 
   const [openPlantSuccess, setOpenPlantSuccess] = useState(false)
   const [openOpenedWarning, setOpenOpenedWarning] = useState(false) 
-  
+
   const [openDetails, setOpenDetails] = useState(false)
   const [openMaps, setOpenMaps] = useState(false)
   

@@ -7,16 +7,17 @@ export default function Auth() {
   const navigate = useNavigate();
   
   const [searchParams] = useSearchParams();
-  const token = searchParams.get('token'); // Extract the 'token' parameter
-  const auth_url = `${import.meta.env.VITE_API_HOST}/auth?token=${token || import.meta.env.VITE_AUTH_TOKEN}`;
+  const token = searchParams.get('token') || import.meta.env.VITE_AUTH_TOKEN; // Extract the 'token' parameter
+  const auth_url = `${import.meta.env.VITE_API_HOST}/auth?token=${token}`;
   useEffect(() => {
+    window.history.replaceState(null, '', '/auth'); 
     fetch(auth_url)
     .then(response => response.json()
       .then(data => {
-        navigate(`/?session=${data.cred}`, {state: {clientId: data.cred}})
+        navigate(`/`, {replace: true, state: {session: data.cred}})
     }
     ));
-  }, [token]);
+  }, [token, navigate]);
 
   return <Backdrop
     sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
