@@ -1,97 +1,62 @@
 import { useEffect, useState, useRef } from 'react'
-import reactLogo from '../assets/react.svg'
+
 import '../cs/styles.css'
 
-import { HiOutlineMap } from "react-icons/hi";
-
 import PowerPlant from './PowerPlant'
+import AppTitle from './AppTitle'
 
-import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress'
-import Typography from '@mui/material/Typography'
-import AppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
 import Backdrop from '@mui/material/Backdrop'
 
-import Tooltip from '@mui/material/Tooltip';
+import {
+  CloseDoorNotification,
+  CrateOpenNotification,
+} from './Notifications'
 
-import { CloseDoorNotification, 
-         CrateOpenNotification } from './Notifications'
 import { PlantInfoDialog, MapPlantSelectDialog } from './Dialogs';
 import NoAccess from './NoAccess';
 import { useSearchParams } from 'react-router-dom';
 
-function AppTitle({setOpenMaps, address}) {
-  return (
-  <AppBar sx={{ position: 'static', py: 1}}>
-    <Box sx={{
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'space-between',
-      width: '100%'
-    }}>
-      <Box sx={{ 
-        display: 'flex', 
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        <img src={reactLogo} className="App-logo" alt="logo" />
-        <div>
-          <Typography sx={{ flex: 1 }} variant="h5" component="div">
-            Зарядная станция
-          </Typography>
-          <Typography variant="caption" component="div" sx={{ lineHeight: 1, opacity: 0.8 }}>
-            {address}
-          </Typography>
-        </div>
-      </Box>
-      <Tooltip title="Выбрать станцию">
-      <IconButton 
-        color="inherit" 
-        onClick={() => { setOpenMaps(true) }}
-      >
-        <HiOutlineMap />
-      </IconButton>
-    </Tooltip>
-    </Box>
-  </AppBar>)
-}
-
 function isServerEvent(message) {
   const parsedMessage = JSON.parse(message.data);
-  return parsedMessage.type === "server"; 
+  return parsedMessage.type === "server";
 }
 const backend_entrypoint = import.meta.env.VITE_API_HOST;
 
-export default function PowerControl({authorized = true}) {
-  const [clientId, setClientId] = useState(null)
-  useEffect(()=>{setClientId(history.state.session), console.log(history.state.session)}, [authorized]);
-  
-  console.log(clientId)
+export default function PowerControl() {
+  const [clientId, setClientId] = useState(null);
 
-  if (!authorized) return <NoAccess/>;
+  const [searchParams] = useSearchParams();
+  const sessionId = searchParams.get('session') || null;
 
-  const [address, setAddress] = useState(null);
+  if (!sessionId || sessionId === undefined) return <NoAccess />;
 
-  const [apiUrl, setApiUrl] = useState(null);
-  const [socketUrl, setSocketUrl] = useState(null);
-  const [mapsUrl, setMapsUrl] = useState(null)
-  const socket = useRef(null);
-  const [loading, setLoading] = useState(true);
+  const [address, setAddress] = useState(null);   // Адрес зарядной станции
+
+  // Объекты для связи
+  const [apiUrl, setApiUrl] = useState(null);     //Entry API
+  const [mapsUrl, setMapsUrl] = useState(null)    //Entry Карты
+  const socket = useRef(null);                    //Websocket
+
+  // Текущая открываемая ячейка
   const [currentCell, setCurrentCell] = useState(null);
+  
+  const [loading, setLoading] = useState(true);
   const [update, setUpdate] = useState(false);
 
+  // Уведомления
   const [openPlantSuccess, setOpenPlantSuccess] = useState(false)
-  const [openOpenedWarning, setOpenOpenedWarning] = useState(false) 
+  const [openOpenedWarning, setOpenOpenedWarning] = useState(false)
 
+  // Диалоговые окна
   const [openDetails, setOpenDetails] = useState(false)
   const [openMaps, setOpenMaps] = useState(false)
-  
+
+  // Список незакрытых пользователем ячеек
   const [openedCrates, setOpenedCrates] = useState([])
 
-  const onUpdated = () => setUpdate(false)
-
   const open_plant = (id) => {
+    if (!socket.current) return;
     socket.current.send(JSON.stringify({
       user: clientId,
       action: "open",
@@ -99,61 +64,65 @@ export default function PowerControl({authorized = true}) {
     }))
   }
 
+
   useEffect(() => {
-        socket.current = new WebSocket(`${backend_entrypoint}/ws/${clientId}`);
-        socket.current.onopen = event => {
-          socket.current.send(JSON.stringify({
-            user: clientId,
-            action: "connect"
-          })) 
-        };
-        socket.current.onmessage = event => {
-          console.log(event)
-          if (isServerEvent(event)) {
-            let data = JSON.parse(event.data);
-            console.log(data)
-            let action = data.action;
-            if (action === 'update') {
-              setUpdate(true)
-              if (data.who === `${clientId}`) {
-                setOpenPlantSuccess(true);
-              }
-            }
+    fetch(backend_entrypoint)  // Replace with your config endpoint
+      .then(response => response.json())
+      .then(data => {
+        setApiUrl(data.api);
+        setMapsUrl(data.locations)
+        setAddress(data.address);
+        setLoading(false);
+      })
+      .then(() => {
+        fetch(`${backend_entrypoint}/api/user?session=${sessionId}`)
+          .then(response => response.json())
+          .then(data => setClientId(data.user))
+      })
+      .catch(error => console.error('Error fetching config:', error));
+  }, [clientId]);
 
-            if (action === 'notify_close') {
-              if (data.who === `${clientId}`) {
-                setOpenedCrates(data.plant);
-                setOpenOpenedWarning(true);
-              }
-            }
-
+  useEffect(() => {
+    if (clientId === null || clientId === undefined) return
+    socket.current = new WebSocket(`${backend_entrypoint}/ws/${clientId}?token=${sessionId}`);
+    socket.current.onopen = event => {
+      socket.current.send(JSON.stringify({
+        user: clientId,
+        action: "connect"
+      }))
+    };
+    socket.current.onmessage = event => {
+      if (isServerEvent(event)) {
+        let data = JSON.parse(event.data);
+        let action = data.action;
+        if (action === 'update') {
+          setUpdate(true)
+          if (data.who === `${clientId}`) {
+            setOpenPlantSuccess(true);
           }
-        };
-        socket.current.onclose = event => {};
+        }
 
-        const wsCurrent = socket.current;
+        if (action === 'notify_close') {
+          if (data.who === `${clientId}`) {
+            setOpenedCrates(data.plant);
+            setOpenOpenedWarning(true);
+          }
+        }
 
-        return () => {
-            wsCurrent.close();
-        };
-    }, [socket]);
+        if (action === 'expiried') {
+          if (data.who === `${clientId}`) {}
+        }
+      }
+    };
+    socket.current.onclose = event => {};
 
-  useEffect(() => {
-        fetch(backend_entrypoint)  // Replace with your config endpoint
-        .then(response => response.json()
-        .then(data => {
-            setApiUrl(data.api);
-            setSocketUrl(data.socket);
-            setMapsUrl(data.locations)
-            setAddress(data.address);
-            setLoading(false);
-        })
-        .catch(error => console.error('Error fetching config:', error)));
-    }, []);
+    const wsCurrent = socket.current;
 
-  
+    return () => {
+      wsCurrent.close();
+    };
+  }, [socket, clientId]);
 
-  const showDetails = () => setOpenDetails(true);
 
   if (loading) return <Backdrop
     sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
@@ -166,7 +135,7 @@ export default function PowerControl({authorized = true}) {
     <>
       <header>
         <AppTitle
-          setOpenMaps={()=>{setOpenMaps(true)}}
+          setOpenMaps={() => { setOpenMaps(true) }}
           address={address}
         />
       </header>
@@ -175,36 +144,40 @@ export default function PowerControl({authorized = true}) {
           <PowerPlant
             apiUrl={apiUrl}
             setCellApiUrl={setCurrentCell}
-            onDisplayDetails={showDetails}
+            onDisplayDetails={() => setOpenDetails(true)}
             update={update}
-            onUpdated={onUpdated}
+            onUpdated={() => setUpdate(false)}
           />
         </div>
       </main>
 
-      <CrateOpenNotification 
+      <CrateOpenNotification
         open={openPlantSuccess}
-        onClickClose={()=>{setOpenPlantSuccess(false)}}
+        onClickClose={() => { setOpenPlantSuccess(false) }}
       />
 
       <CloseDoorNotification
         open={openOpenedWarning}
-        onClickClose={() => {setOpenOpenedWarning(false)}}
+        onClickClose={() => { setOpenOpenedWarning(false) }}
         doors={openedCrates}
-       />
+      />
 
-      <PlantInfoDialog 
+      <PlantInfoDialog
         open={openDetails}
         cell={currentCell}
         onClickClose={() => setOpenDetails(false)}
         onPlantOpen={open_plant}
       />
 
-      <MapPlantSelectDialog 
+      <MapPlantSelectDialog
         url={mapsUrl}
         open={openMaps}
         onClickClose={() => setOpenMaps(false)}
       />
+{/* 
+      <ConnectionLostNotification
+        open={disconnected}
+      /> */}
     </>
   )
 }

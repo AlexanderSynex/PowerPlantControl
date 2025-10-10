@@ -10,8 +10,8 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={ <PowerControl /> }  />
         <Route path="/auth" element={ <Auth/> } />
+        <Route path="/" element={ <PowerControl /> }  />
       </Routes>
     </Router>
   </StrictMode>,

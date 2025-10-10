@@ -14,7 +14,7 @@ export default function Auth() {
     fetch(auth_url)
     .then(response => response.json()
       .then(data => {
-        navigate(`/`, {replace: true, state: {session: data.cred}})
+        navigate(`/?session=${data.cred}`, {replace: true})
     }
     ));
   }, [token, navigate]);
