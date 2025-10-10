@@ -15,7 +15,7 @@ import {
 
 import { PlantInfoDialog, MapPlantSelectDialog } from './Dialogs';
 import NoAccess from './NoAccess';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function isServerEvent(message) {
   const parsedMessage = JSON.parse(message.data);
@@ -24,12 +24,13 @@ function isServerEvent(message) {
 const backend_entrypoint = import.meta.env.VITE_API_HOST;
 
 export default function PowerControl() {
-  const [clientId, setClientId] = useState(null);
-
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session') || null;
+  window.history.replaceState({}, '', '/');
+  const [authorized, setAuthorized] = useState(sessionId && sessionId !== undefined);
 
-  if (!sessionId || sessionId === undefined) return <NoAccess />;
+  if (!authorized) return <NoAccess/>
 
   const [address, setAddress] = useState(null);   // Адрес зарядной станции
 
@@ -41,8 +42,9 @@ export default function PowerControl() {
   // Текущая открываемая ячейка
   const [currentCell, setCurrentCell] = useState(null);
   
-  const [loading, setLoading] = useState(true);
-  const [update, setUpdate] = useState(false);
+  // Флаги
+  const [loading, setLoading] = useState(true);   //Загрузка данных
+  const [update, setUpdate] = useState(false);    //Нужно обновляться
 
   // Уведомления
   const [openPlantSuccess, setOpenPlantSuccess] = useState(false)
@@ -58,12 +60,11 @@ export default function PowerControl() {
   const open_plant = (id) => {
     if (!socket.current) return;
     socket.current.send(JSON.stringify({
-      user: clientId,
+      user: sessionId,
       action: "open",
       plant: id
     }))
   }
-
 
   useEffect(() => {
     fetch(backend_entrypoint)  // Replace with your config endpoint
@@ -74,20 +75,15 @@ export default function PowerControl() {
         setAddress(data.address);
         setLoading(false);
       })
-      .then(() => {
-        fetch(`${backend_entrypoint}/api/user?session=${sessionId}`)
-          .then(response => response.json())
-          .then(data => setClientId(data.user))
-      })
       .catch(error => console.error('Error fetching config:', error));
-  }, [clientId]);
+  }, []);
 
   useEffect(() => {
-    if (clientId === null || clientId === undefined) return
-    socket.current = new WebSocket(`${backend_entrypoint}/ws/${clientId}?token=${sessionId}`);
+    if (sessionId === null || sessionId === undefined) return;
+    socket.current = new WebSocket(`${backend_entrypoint}/ws/${sessionId}`);
     socket.current.onopen = event => {
       socket.current.send(JSON.stringify({
-        user: clientId,
+        user: sessionId,
         action: "connect"
       }))
     };
@@ -95,22 +91,23 @@ export default function PowerControl() {
       if (isServerEvent(event)) {
         let data = JSON.parse(event.data);
         let action = data.action;
+        console.log(data)
         if (action === 'update') {
           setUpdate(true)
-          if (data.who === `${clientId}`) {
+          if (data.who === `${sessionId}`) {
             setOpenPlantSuccess(true);
           }
         }
+        
+        if (action === 'expired') {
+          navigate(0)
+        }
 
         if (action === 'notify_close') {
-          if (data.who === `${clientId}`) {
+          if (data.who === `${sessionId}`) {
             setOpenedCrates(data.plant);
             setOpenOpenedWarning(true);
           }
-        }
-
-        if (action === 'expiried') {
-          if (data.who === `${clientId}`) {}
         }
       }
     };
@@ -121,8 +118,7 @@ export default function PowerControl() {
     return () => {
       wsCurrent.close();
     };
-  }, [socket, clientId]);
-
+  }, [socket]);
 
   if (loading) return <Backdrop
     sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
