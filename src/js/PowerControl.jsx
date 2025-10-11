@@ -27,9 +27,9 @@ const backend_entrypoint = import.meta.env.VITE_API_HOST;
 export default function PowerControl() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const sessionId = searchParams.get('session') || true;
+  const sessionId = searchParams.get('session') || null;
   window.history.replaceState({}, '', '/');
-  const [authorized, setAuthorized] = useState(sessionId && sessionId !== undefined);
+  const authorized = sessionId && sessionId !== undefined;
 
   if (!authorized) return <NoAccess/>
 
@@ -112,14 +112,13 @@ export default function PowerControl() {
         }
       }
     };
-    socket.current.onclose = event => {};
-
-    const wsCurrent = socket.current;
+    socket.current.onclose = event => {console.log(socket.current);};
 
     return () => {
-      wsCurrent.close();
+      if (socket.current)
+        socket.current.close();
     };
-  }, [socket]);
+  }, [socket.current]);
 
   if (loading) return <Backdrop
     sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
