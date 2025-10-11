@@ -16,6 +16,7 @@ import {
 import { PlantInfoDialog, MapPlantSelectDialog } from './Dialogs';
 import NoAccess from './NoAccess';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Box } from '@mui/material'
 
 function isServerEvent(message) {
   const parsedMessage = JSON.parse(message.data);
@@ -26,7 +27,7 @@ const backend_entrypoint = import.meta.env.VITE_API_HOST;
 export default function PowerControl() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const sessionId = searchParams.get('session') || null;
+  const sessionId = searchParams.get('session') || true;
   window.history.replaceState({}, '', '/');
   const [authorized, setAuthorized] = useState(sessionId && sessionId !== undefined);
 
@@ -136,7 +137,7 @@ export default function PowerControl() {
         />
       </header>
       <main>
-        <div className='App App-body'>
+        <Box className='App App-body'>
           <PowerPlant
             apiUrl={apiUrl}
             setCellApiUrl={setCurrentCell}
@@ -144,7 +145,7 @@ export default function PowerControl() {
             update={update}
             onUpdated={() => setUpdate(false)}
           />
-        </div>
+        </Box>
       </main>
 
       <CrateOpenNotification
