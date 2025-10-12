@@ -13,7 +13,7 @@ export default function NoAccess() {
       
       <h1 className="text-4xl font-bold text-gray-800 mb-4">Нет доступа</h1>
       <p className="text-center text-gray-600">
-        Воспользуйтесь QR-кодом на зарядной станции для получения доступа
+        Воспользуйтесь QR-кодом на зарядной станции для доступа к приложению
       </p>
     </div>
   );
