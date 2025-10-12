@@ -1,5 +1,5 @@
 # Build stage
-FROM node:lts-alpine AS build
+FROM node:lts-alpine as build
 WORKDIR /app
 # Copy package files
 COPY package*.json ./
@@ -9,6 +9,7 @@ RUN npm ci
 COPY . .
 # Build the app
 RUN npm run build
+
 
 # Production stage
 FROM nginx:alpine
