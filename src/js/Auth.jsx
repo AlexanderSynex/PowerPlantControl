@@ -7,14 +7,21 @@ export default function Auth() {
   const navigate = useNavigate();
   
   const [searchParams] = useSearchParams();
-  const token = searchParams.get('token') || import.meta.env.VITE_AUTH_TOKEN; // Extract the 'token' parameter
+  const token = searchParams.get('token'); // Extract the 'token' parameter
   const auth_url = `${import.meta.env.VITE_API_HOST}/auth?token=${token}`;
   useEffect(() => {
-    window.history.replaceState(null, '', '/auth'); 
+    window.history.replaceState(null, '', '/auth');
+    if (token === null) navigate(`/`, {replace: true})
     fetch(auth_url)
     .then(response => response.json()
       .then(data => {
-        navigate(`/?session=${data.cred}`, {replace: true})
+        console.log(data)
+        if (data.valid) {
+          navigate(`/?session=${data.cred}`, {replace: true});
+          return;
+        }
+        navigate(`/`, {replace: true});
+        
     }
     ));
   }, [token, navigate]);
