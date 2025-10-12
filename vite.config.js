@@ -12,4 +12,14 @@ export default defineConfig({
     host: true,
     port: 8080,
   },
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+  },
+  define: {
+    __APP_ENV__: JSON.stringify(env.APP_ENV),
+  },
+
 })
+
+
