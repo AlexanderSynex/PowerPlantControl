@@ -1,33 +1,34 @@
-# Build stage
-FROM node:lts-alpine as build
+# Multi-stage build
+FROM node:alpine AS builder
+
 WORKDIR /app
-# Copy package files
 COPY package*.json ./
-# Install all dependencies (including dev for build)
 RUN npm ci
-# Copy source code
 COPY . .
-# Build the app
 RUN npm run build
 
-
 # Production stage
-FROM nginx:alpine
-# Install curl for healthcheck
-RUN apk add --no-cache curl
-# Copy built app to nginx
-COPY --from=build /app/dist /usr/share/nginx/html
-# Copy nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
-# Create non-root user for security
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S reactapp -u 1001
-# Change ownership of nginx files
-RUN chown -R reactapp:nodejs /var/cache/nginx && \
-    chown -R reactapp:nodejs /var/log/nginx && \
-    chown -R reactapp:nodejs /etc/nginx/conf.d
-RUN touch /var/run/nginx.pid && \
-    chown -R reactapp:nodejs /var/run/nginx.pid
-USER reactapp
+FROM node:alpine AS production
+
+WORKDIR /app
+
+# Copy package files and install only production dependencies
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy built application
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+
+# Install serve to serve static files
+RUN npm install -g serve
+
+# Expose port
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:80 || exit 1
+
+# Start the application
+CMD ["serve", "-s", "dist", "-l", "80"]
