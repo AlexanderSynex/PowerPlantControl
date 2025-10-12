@@ -1,5 +1,5 @@
 # Multi-stage build
-FROM node:alpine AS builder
+FROM node:lts-alpine AS builder
 
 WORKDIR /app
 COPY package*.json ./
@@ -8,7 +8,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:alpine AS production
+FROM node:lts-alpine AS production
 
 WORKDIR /app
 
