@@ -157,14 +157,14 @@ export default function PowerControl() {
         onClickClose={() => { setOpenOpenedWarning(false) }}
         doors={openedCrates}
       />
-
+*/}
       <PlantInfoDialog
         open={openDetails}
         cell={currentCell}
         onClickClose={() => setOpenDetails(false)}
         onPlantOpen={open_plant}
       />
-*/}
+
       <MapPlantSelectDialog
         url={mapsUrl}
         open={openMaps}
