@@ -72,6 +72,7 @@ export default function PowerControl() {
       .then(response => response.json())
       .then(data => {
         setAddress(data.current);
+        setLoading(false);
       })
       .catch(error => console.error('Error fetching config:', error));
   }, []);
@@ -80,7 +81,7 @@ export default function PowerControl() {
     if (sessionId === null || sessionId === undefined) return;
     socket.current = new WebSocket(`wss://${backend_entrypoint}/ws/${sessionId}`);
     socket.current.onopen = event => {
-      setLoading(false);
+      
       socket.current.send(JSON.stringify({
         user: sessionId,
         action: "connect"
