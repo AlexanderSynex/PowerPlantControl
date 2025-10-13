@@ -43,7 +43,7 @@ services:
     networks:
       - app-network
     env_file:
-      - .env
+      - ./api-webserver/.env
 
 networks:
   app-network:
