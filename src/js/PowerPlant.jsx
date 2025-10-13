@@ -24,7 +24,7 @@ function PowerPlant({ apiUrl, onDisplayDetails, setCellApiUrl, update, onUpdated
   >
     <CircularProgress color="inherit" />
   </Backdrop>;
-
+  return <div>aaaaaaaaaaaaaaaaa</div>
   return (
     <div className="centered plant-container">
       {layers.map((layerApi, i) => (
