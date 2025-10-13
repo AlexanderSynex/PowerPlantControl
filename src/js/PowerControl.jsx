@@ -67,15 +67,15 @@ export default function PowerControl() {
     }))
   }
 
-  useEffect(() => {
-    fetch(mapsUrl)  // Replace with your config endpoint
-      .then(response => response.json())
-      .then(data => {
-        setAddress(data.current);
-        setLoading(false);
-      })
-      .catch(error => console.error('Error fetching config:', error));
-  }, []);
+  // useEffect(() => {
+  //   fetch(mapsUrl)  // Replace with your config endpoint
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       setAddress(data.current);
+  //       setLoading(false);
+  //     })
+  //     .catch(error => console.error('Error fetching config:', error));
+  // }, []);
 
   // useEffect(() => {
   //   if (sessionId === null || sessionId === undefined) return;
@@ -118,6 +118,8 @@ export default function PowerControl() {
   //       socket.current.close();
   //   };
   // }, [socket.current]);
+
+  return <div>LOADED</div>
 
   if (loading) return <Backdrop
     sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}

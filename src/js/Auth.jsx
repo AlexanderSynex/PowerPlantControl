@@ -11,7 +11,7 @@ export default function Auth() {
   const auth_url = `/api/auth?token=${token}`;
   
   useEffect(() => {
-    window.history.replaceState(null, '', '/auth');
+    // window.history.replaceState(null, '', '/auth');
     if (token === null) navigate(`/`, {replace: true})
     fetch(auth_url)
     .then(response => response.json()
