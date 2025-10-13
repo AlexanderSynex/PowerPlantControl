@@ -36,8 +36,8 @@ export default function PowerControl() {
   const [address, setAddress] = useState(null);   // Адрес зарядной станции
 
   // Объекты для связи
-  const apiUrl = `${backend_entrypoint}/api`;     //Entry API
-  const mapsUrl = `${backend_entrypoint}/api/locations`    //Entry Карты
+  const apiUrl = `https://${backend_entrypoint}/api`;     //Entry API
+  const mapsUrl = `https://${backend_entrypoint}/api/locations`    //Entry Карты
   const socket = useRef(null);                    //Websocket
 
   // Текущая открываемая ячейка
@@ -78,7 +78,7 @@ export default function PowerControl() {
 
   useEffect(() => {
     if (sessionId === null || sessionId === undefined) return;
-    socket.current = new WebSocket(`${backend_entrypoint}/api/ws/${sessionId}`);
+    socket.current = new WebSocket(`wss://${backend_entrypoint}/ws/${sessionId}`);
     socket.current.onopen = event => {
       setLoading(false);
       socket.current.send(JSON.stringify({
