@@ -67,15 +67,15 @@ export default function PowerControl() {
     }))
   }
 
-  // useEffect(() => {
-  //   fetch('/api/locations')  // Replace with your config endpoint
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       setAddress(data.current);
-  //       setLoading(false);
-  //     })
-  //     .catch(error => console.error('Error fetching config:', error));
-  // }, []);
+  useEffect(() => {
+    fetch('/api/locations')  // Replace with your config endpoint
+      .then(response => response.json())
+      .then(data => {
+        setAddress(data.current);
+        setLoading(false);
+      })
+      .catch(error => console.error('Error fetching config:', error));
+  }, []);
 
   // useEffect(() => {
   //   if (sessionId === null || sessionId === undefined) return;
