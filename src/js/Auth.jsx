@@ -8,12 +8,10 @@ export default function Auth() {
   
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token'); // Extract the 'token' parameter
-  const auth_url = `/api/auth?token=${token}`;
-  
   useEffect(() => {
     // window.history.replaceState(null, '', '/auth');
     if (token === null) navigate(`/`, {replace: true})
-    fetch(auth_url)
+    fetch(`/api/auth?token=${token}`)
     .then(response => response.json()
       .then(data => {
         console.log(data)
