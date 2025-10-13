@@ -37,8 +37,8 @@ export default function PowerControl() {
   const [address, setAddress] = useState(null);   // Адрес зарядной станции
 
   // Объекты для связи
-  const apiUrl = `https://${backend_entrypoint}/api`;     //Entry API
-  const mapsUrl = `https://${backend_entrypoint}/api/locations`    //Entry Карты
+  const apiUrl = `/api`;     //Entry API
+  const mapsUrl = `/api/locations`    //Entry Карты
   const socket = useRef(null);                    //Websocket
 
   // Текущая открываемая ячейка
@@ -69,7 +69,7 @@ export default function PowerControl() {
   }
 
   useEffect(() => {
-    fetch(mapsUrl)  // Replace with your config endpoint
+    fetch('/api/locations')  // Replace with your config endpoint
       .then(response => response.json())
       .then(data => {
         setAddress(data.current);
