@@ -71,7 +71,7 @@ export default function PowerControl() {
     fetch('/api/locations')  // Replace with your config endpoint
       .then(response => response.json())
       .then(data => {
-        setAddress(data.current);
+        setAddress(data?.current);
         setLoading(false);
       })
       .catch(error => console.error('Error fetching config:', error));
@@ -132,7 +132,7 @@ export default function PowerControl() {
       <header>
         <AppTitle
           setOpenMaps={() => { setOpenMaps(true) }}
-          address={address}
+          address={JSON.stringify(address, null)}
         />
       </header>
       <main>
