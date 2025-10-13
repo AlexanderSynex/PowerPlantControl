@@ -8,7 +8,7 @@ export default function Auth() {
   
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token'); // Extract the 'token' parameter
-  const auth_url = `${import.meta.env.VITE_API_HOST}/auth?token=${token}`;
+  const auth_url = `${import.meta.env.VITE_API_HOST}/api/auth?token=${token}`;
   useEffect(() => {
     window.history.replaceState(null, '', '/auth');
     if (token === null) navigate(`/`, {replace: true})

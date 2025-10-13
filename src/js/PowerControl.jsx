@@ -78,7 +78,7 @@ export default function PowerControl() {
 
   useEffect(() => {
     if (sessionId === null || sessionId === undefined) return;
-    socket.current = new WebSocket(`${backend_entrypoint}/ws/${sessionId}`);
+    socket.current = new WebSocket(`${backend_entrypoint}/api/ws/${sessionId}`);
     socket.current.onopen = event => {
       setLoading(false);
       socket.current.send(JSON.stringify({
@@ -136,7 +136,7 @@ export default function PowerControl() {
       <main>
         <Box className='App App-body'>
           <PowerPlant
-            apiUrl={apiUrl}
+            apiUrl={`${apiUrl}/entry`}
             setCellApiUrl={setCurrentCell}
             onDisplayDetails={() => setOpenDetails(true)}
             update={update}
