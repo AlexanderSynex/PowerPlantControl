@@ -1,18 +1,35 @@
 services:
-  frontend-app:
-    build: .
-    container_name: frontend-app
+  nginx:
+    image: nginx:alpine
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./.ssl/cybertex.pro.crt:/etc/nginx/ssl/cybertex.pro.crt:ro
-      - ./.ssl/cybertex.pro.key:/etc/nginx/ssl/cybertex.pro.key:ro
-    restart: unless-stopped
-    environment:
-      - NODE_ENV=production
+    - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    - ./.ssl/cybertex.pro.crt:/etc/nginx/ssl/cybertex.pro.crt:ro
+    - ./.ssl/cybertex.pro.key:/etc/nginx/ssl/cybertex.pro.key:ro
+    depends_on:
+      - frontend-app    
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/"]
       interval: 30s
       timeout: 10s
       retries: 3
+      networks:
+      - app-network
+
+  frontend-app:
+    build: .
+    container_name: frontend-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3000"
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
