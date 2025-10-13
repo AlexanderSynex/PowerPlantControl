@@ -132,7 +132,7 @@ export default function PowerControl() {
       <header>
         <AppTitle
           setOpenMaps={() => { setOpenMaps(true) }}
-          address={JSON.stringify(address, null)}
+          address={address?.address || null}
         />
       </header>
       <main>
