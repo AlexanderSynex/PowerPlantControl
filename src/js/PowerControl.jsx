@@ -77,47 +77,47 @@ export default function PowerControl() {
       .catch(error => console.error('Error fetching config:', error));
   }, []);
 
-  useEffect(() => {
-    if (sessionId === null || sessionId === undefined) return;
-    socket.current = new WebSocket(`wss://${backend_entrypoint}/ws/${sessionId}`);
-    socket.current.onopen = event => {
+  // useEffect(() => {
+  //   if (sessionId === null || sessionId === undefined) return;
+  //   socket.current = new WebSocket(`wss://${backend_entrypoint}/api/ws/${sessionId}`);
+  //   socket.current.onopen = event => {
       
-      socket.current.send(JSON.stringify({
-        user: sessionId,
-        action: "connect"
-      }))
-    };
-    socket.current.onmessage = event => {
-      if (isServerEvent(event)) {
-        let data = JSON.parse(event.data);
-        let action = data.action;
-        console.log(data)
-        if (action === 'update') {
-          setUpdate(true)
-          if (data.who === `${sessionId}`) {
-            setOpenPlantSuccess(true);
-          }
-        }
+  //     socket.current.send(JSON.stringify({
+  //       user: sessionId,
+  //       action: "connect"
+  //     }))
+  //   };
+  //   socket.current.onmessage = event => {
+  //     if (isServerEvent(event)) {
+  //       let data = JSON.parse(event.data);
+  //       let action = data.action;
+  //       console.log(data)
+  //       if (action === 'update') {
+  //         setUpdate(true)
+  //         if (data.who === `${sessionId}`) {
+  //           setOpenPlantSuccess(true);
+  //         }
+  //       }
         
-        if (action === 'expired') {
-          navigate(0)
-        }
+  //       if (action === 'expired') {
+  //         navigate(0)
+  //       }
 
-        if (action === 'notify_close') {
-          if (data.who === `${sessionId}`) {
-            setOpenedCrates(data.plant);
-            setOpenOpenedWarning(true);
-          }
-        }
-      }
-    };
-    socket.current.onclose = event => {console.log(socket.current);};
+  //       if (action === 'notify_close') {
+  //         if (data.who === `${sessionId}`) {
+  //           setOpenedCrates(data.plant);
+  //           setOpenOpenedWarning(true);
+  //         }
+  //       }
+  //     }
+  //   };
+  //   socket.current.onclose = event => {console.log(socket.current);};
 
-    return () => {
-      if (socket.current)
-        socket.current.close();
-    };
-  }, [socket.current]);
+  //   return () => {
+  //     if (socket.current)
+  //       socket.current.close();
+  //   };
+  // }, [socket.current]);
 
   if (loading) return <Backdrop
     sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
