@@ -50,6 +50,9 @@ web_modules/
 # Optional npm cache directory
 .npm
 
+# SSL Certificates
+.ssl
+
 # Optional eslint cache
 .eslintcache
 
