@@ -88,28 +88,28 @@ export default function PowerControl() {
       }))
     };
     socket.current.onmessage = event => {
-      // if (isServerEvent(event)) {
-      //   let data = JSON.parse(event?.data);
-      //   let action = data.action;
-      //   console.log(data)
-      //   if (action === 'update') {
-      //     setUpdate(true)
-      //     if (data.who === `${sessionId}`) {
-      //       setOpenPlantSuccess(true);
-      //     }
-      //   }
+      if (isServerEvent(event)) {
+        let data = JSON.parse(event?.data);
+        let action = data?.action;
+        console.log(data)
+        if (action === 'update') {
+          setUpdate(true)
+          if (data?.who === `${sessionId}`) {
+            setOpenPlantSuccess(true);
+          }
+        }
         
-      //   if (action === 'expired') {
-      //     navigate(0)
-      //   }
+        if (action === 'expired') {
+          navigate(0)
+        }
 
-      //   if (action === 'notify_close') {
-      //     if (data.who === `${sessionId}`) {
-      //       setOpenedCrates(data.plant);
-      //       setOpenOpenedWarning(true);
-      //     }
-      //   }
-      // }
+        if (action === 'notify_close') {
+          if (data?.who === `${sessionId}`) {
+            setOpenedCrates(data?.plant);
+            setOpenOpenedWarning(true);
+          }
+        }
+      }
     };
     socket.current.onclose = event => {console.log(socket.current);};
 
@@ -146,12 +146,12 @@ export default function PowerControl() {
           />
         </Box>
       </main>
-{/* 
+
       <CrateOpenNotification
         open={openPlantSuccess}
         onClickClose={() => { setOpenPlantSuccess(false) }}
       />
-
+{/* 
       <CloseDoorNotification
         open={openOpenedWarning}
         onClickClose={() => { setOpenOpenedWarning(false) }}
