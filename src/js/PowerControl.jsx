@@ -37,7 +37,6 @@ export default function PowerControl() {
   const [address, setAddress] = useState(null);   // Адрес зарядной станции
 
   // Объекты для связи
-  const apiUrl = `/api`;     //Entry API
   const mapsUrl = `/api/locations`    //Entry Карты
   const socket = useRef(null);                    //Websocket
 
@@ -128,7 +127,6 @@ export default function PowerControl() {
     <CircularProgress color="inherit" />
   </Backdrop>
 
-return <div>LOADED</div>
   return (
     <>
       <header>
@@ -140,7 +138,7 @@ return <div>LOADED</div>
       <main>
         <Box className='App App-body'>
           <PowerPlant
-            apiUrl={`${apiUrl}/entry`}
+            apiUrl={`/api/entry`}
             setCellApiUrl={setCurrentCell}
             onDisplayDetails={() => setOpenDetails(true)}
             update={update}
