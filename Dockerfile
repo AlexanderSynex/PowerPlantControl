@@ -24,10 +24,11 @@ COPY --from=builder /app/node_modules ./node_modules
 RUN npm install -g serve
 
 # Expose port
-EXPOSE 3000 443
+# EXPOSE 80
+EXPOSE 3000
 
-# Install dumb-init for better signal handling
-RUN apk add --no-cache dumb-init
+# # Install dumb-init for better signal handling
+# RUN apk add --no-cache dumb-init
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
@@ -35,4 +36,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 # Start the application
 # CMD ["serve", "-s", "dist", "-l", "80"]
-CMD ["dumb-init", "serve", "-s", "dist", "-l", "3000"]
+CMD ["serve", "-s", "dist", "-l", "3000"]
