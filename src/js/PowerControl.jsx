@@ -119,16 +119,16 @@ export default function PowerControl() {
         socket.current.close();
     };
   }, [socket.current]);
-
-  return <div>LOADED</div>
+//https://cybertex.pro/auth?token=ff22b036-98a7-4b91-8055-38f964a4ea6e
 
   if (loading) return <Backdrop
-    sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+    sx={(theme) => ({ color: '#fff', zIndex: 1000 })}
     open={loading}
   >
     <CircularProgress color="inherit" />
   </Backdrop>
 
+return <div>LOADED</div>
   return (
     <>
       <header>
