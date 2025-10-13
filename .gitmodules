@@ -1,0 +1,3 @@
+[submodule "api-webserver"]
+	path = api-webserver
+	url = git@github.com:AlexanderSynex/battery-app-webserver.git

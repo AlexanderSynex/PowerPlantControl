@@ -29,6 +29,21 @@ services:
     networks:
       - app-network
 
+  
+  api-server:
+    restart: unless-stopped
+    build: 
+      context: ./api-webserver
+      dockerfile: Dockerfile
+    container_name: api-server
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "8000"
+    networks:
+      - app-network
+    env_file:
+      - .env
 
 networks:
   app-network:
