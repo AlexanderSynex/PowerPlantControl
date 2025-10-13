@@ -130,11 +130,10 @@ export default function PowerControl() {
   return (
     <>
       <header>
-        {/* <AppTitle
+        <AppTitle
           setOpenMaps={() => { setOpenMaps(true) }}
           address={address}
-        /> */}
-        TITLE
+        />
       </header>
       <main>
         <Box className='App App-body'>
