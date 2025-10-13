@@ -36,13 +36,13 @@ function PlantDetail({ url, onClickClose, onOpen }) {
     fetch(url)  // Replace with your config endpoint
       .then(response => response.json()
         .then(data => {
-          setStatus(data.status);
-          setId(data.id);
-          setCharge(data.charge);
-          setReserved(data.reserved)
-          setOpened(data.opened)
-          setVoltage(data.voltage)
-          setControllable(data.controllable)
+          setStatus(data?.status);
+          setId(data?.id);
+          setCharge(data?.charge);
+          setReserved(data?.reserved)
+          setOpened(data?.opened)
+          setVoltage(data?.voltage)
+          setControllable(data?.controllable)
         })
         .finally(() => setLoading(false))
         .catch(error => console.error('Error fetching plant details:', error)));

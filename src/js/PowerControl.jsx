@@ -164,12 +164,12 @@ export default function PowerControl() {
         onClickClose={() => setOpenDetails(false)}
         onPlantOpen={open_plant}
       />
-
+*/}
       <MapPlantSelectDialog
         url={mapsUrl}
         open={openMaps}
         onClickClose={() => setOpenMaps(false)}
-      /> */}
+      /> 
 {/* 
       <ConnectionLostNotification
         open={disconnected}

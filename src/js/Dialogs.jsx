@@ -39,8 +39,8 @@ export function MapPlantSelectDialog({ url, open, onClickClose }) {
   useEffect(() => {
     fetch(url)
     .then(response => response.json().then((data) => {
-      setPlants(data.locations)
-      setCurrent(data.current.coords)
+      setPlants(data?.locations)
+      setCurrent(data?.current?.coords)
     }))
     .finally(setLoading(false));
   },[])
@@ -127,7 +127,7 @@ export function MapPlantSelectDialog({ url, open, onClickClose }) {
         {plants.map((plant, id) => (
           <ListItem
             disableGutters
-            key={plant.coords}
+            key={plant?.coords}
             sx={{
               px: 2, // Add horizontal padding
               py: 1.5, // Add vertical padding
@@ -141,7 +141,7 @@ export function MapPlantSelectDialog({ url, open, onClickClose }) {
             <ListItemText
               primary={
                 <Typography variant="subtitle1" fontWeight="bold">
-                  {plant.address}
+                  {plant?.address}
                 </Typography>
               }
               secondary={
@@ -149,11 +149,11 @@ export function MapPlantSelectDialog({ url, open, onClickClose }) {
                   <Box 
                     component="span" 
                     sx={{ 
-                      color: plant.opened ? '#009d00' : '#001effff',
+                      color: plant?.opened ? '#009d00' : '#001effff',
                       fontWeight: 'medium',
                     }}
                   >
-                    {plant.opened ? `Доступна` : `Скоро открытие`}
+                    {plant?.opened ? `Доступна` : `Скоро открытие`}
                   </Box>
                   <Box 
                     component="span" 
@@ -161,7 +161,7 @@ export function MapPlantSelectDialog({ url, open, onClickClose }) {
                       display: 'block', 
                       mt: 0.5 
                   }}>
-                    {plant.work_from} - {plant.work_to}
+                    {plant?.work_from} - {plant?.work_to}
                   </Box>
                 </>
               }
