@@ -36,8 +36,8 @@ export default function PowerControl() {
   const [address, setAddress] = useState(null);   // Адрес зарядной станции
 
   // Объекты для связи
-  const [apiUrl, setApiUrl] = useState(null);     //Entry API
-  const [mapsUrl, setMapsUrl] = useState(null)    //Entry Карты
+  const apiUrl = `${backend_entrypoint}/api`;     //Entry API
+  const mapsUrl = `${backend_entrypoint}/api/locations`    //Entry Карты
   const socket = useRef(null);                    //Websocket
 
   // Текущая открываемая ячейка
@@ -68,13 +68,10 @@ export default function PowerControl() {
   }
 
   useEffect(() => {
-    fetch(backend_entrypoint)  // Replace with your config endpoint
+    fetch(mapsUrl)  // Replace with your config endpoint
       .then(response => response.json())
       .then(data => {
-        setApiUrl(data.api);
-        setMapsUrl(data.locations)
-        setAddress(data.address);
-        setLoading(false);
+        setAddress(data.current);
       })
       .catch(error => console.error('Error fetching config:', error));
   }, []);
@@ -83,6 +80,7 @@ export default function PowerControl() {
     if (sessionId === null || sessionId === undefined) return;
     socket.current = new WebSocket(`${backend_entrypoint}/ws/${sessionId}`);
     socket.current.onopen = event => {
+      setLoading(false);
       socket.current.send(JSON.stringify({
         user: sessionId,
         action: "connect"
