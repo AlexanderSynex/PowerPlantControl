@@ -121,7 +121,7 @@ export default function PowerControl() {
 //https://cybertex.pro/auth?token=ff22b036-98a7-4b91-8055-38f964a4ea6e
 
   if (loading) return <Backdrop
-    sx={(theme) => ({ color: '#fff', zIndex: 1000 })}
+    sx={() => ({ color: '#fff', zIndex: 1000 })}
     open={loading}
   >
     <CircularProgress color="inherit" />
@@ -130,13 +130,15 @@ export default function PowerControl() {
   return (
     <>
       <header>
-        <AppTitle
+        {/* <AppTitle
           setOpenMaps={() => { setOpenMaps(true) }}
           address={address}
-        />
+        /> */}
+        TITLE
       </header>
       <main>
-        <Box className='App App-body'>
+        ASDASDASd
+        {/* <Box className='App App-body'>
           <PowerPlant
             apiUrl={`/api/entry`}
             setCellApiUrl={setCurrentCell}
@@ -144,9 +146,9 @@ export default function PowerControl() {
             update={update}
             onUpdated={() => setUpdate(false)}
           />
-        </Box>
+        </Box> */}
       </main>
-
+{/* 
       <CrateOpenNotification
         open={openPlantSuccess}
         onClickClose={() => { setOpenPlantSuccess(false) }}
@@ -169,7 +171,7 @@ export default function PowerControl() {
         url={mapsUrl}
         open={openMaps}
         onClickClose={() => setOpenMaps(false)}
-      />
+      /> */}
 {/* 
       <ConnectionLostNotification
         open={disconnected}
