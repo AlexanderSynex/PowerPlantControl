@@ -5,7 +5,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    volume:
+    volumes:
       - ./.ssl/cybertex.pro.crt:/etc/nginx/ssl/cybertex.pro.crt:ro
       - ./.ssl/cybertex.pro.key:/etc/nginx/ssl/cybertex.pro.key:ro
     restart: unless-stopped
