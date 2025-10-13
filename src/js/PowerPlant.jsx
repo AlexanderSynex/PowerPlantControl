@@ -12,7 +12,8 @@ function PowerPlant({ apiUrl, onDisplayDetails, setCellApiUrl, update, onUpdated
     fetch(apiUrl)  // Replace with your config endpoint
       .then(response => response.json()
         .then(data => {
-          setLayers(data.layers);
+          console.log(data)
+          setLayers(data?.layers);
           setLoading(false);
         })
         .catch(error => console.error('Error fetching config:', error)));
@@ -24,7 +25,6 @@ function PowerPlant({ apiUrl, onDisplayDetails, setCellApiUrl, update, onUpdated
   >
     <CircularProgress color="inherit" />
   </Backdrop>;
-  return <div>aaaaaaaaaaaaaaaaa</div>
   return (
     <div className="centered plant-container">
       {layers.map((layerApi, i) => (

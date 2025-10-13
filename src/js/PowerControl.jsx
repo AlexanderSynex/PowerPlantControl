@@ -136,8 +136,7 @@ export default function PowerControl() {
         />
       </header>
       <main>
-        <div>asd</div>
-        {/* <Box className='App App-body'>
+        <Box className='App App-body'>
           <PowerPlant
             apiUrl={`/api/entry`}
             setCellApiUrl={setCurrentCell}
@@ -145,7 +144,7 @@ export default function PowerControl() {
             update={update}
             onUpdated={() => setUpdate(false)}
           />
-        </Box> */}
+        </Box>
       </main>
 {/* 
       <CrateOpenNotification
