@@ -151,13 +151,13 @@ export default function PowerControl() {
         open={openPlantSuccess}
         onClickClose={() => { setOpenPlantSuccess(false) }}
       />
-{/* 
+{/* */}
       <CloseDoorNotification
         open={openOpenedWarning}
         onClickClose={() => { setOpenOpenedWarning(false) }}
         doors={openedCrates}
       />
-*/}
+
       <PlantInfoDialog
         open={openDetails}
         cell={currentCell}
