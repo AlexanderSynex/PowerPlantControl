@@ -38,6 +38,8 @@ services:
     container_name: api-server
     environment:
       - NODE_ENV=production
+      - ARDUINO_PORT=/dev/ttyACM0
+    privileged: true
     ports:
       - "8000"
     networks:
