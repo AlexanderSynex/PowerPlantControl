@@ -58,7 +58,7 @@ export function MapPlantSelectDialog({ url, open, onClickClose }) {
   aria-labelledby="alert-dialog-title"
   aria-describedby="alert-dialog-description"
 >
-  <AppBar sx={{ position: 'relative' }}>
+  <AppBar sx={{ position: 'relative', bgcolor: '#424489' }}>
     <Toolbar>
       <Typography sx={{ flex: 1 }} variant="h5" component="div">
         Карта зарядных станций

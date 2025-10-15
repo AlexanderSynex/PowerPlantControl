@@ -1,11 +1,11 @@
 import { AppBar, Box, IconButton, Tooltip, Typography } from "@mui/material"
 import { HiOutlineMap } from "react-icons/hi"
 
-import logo from '../assets/ckt-logo.svg'
+import logo from '../assets/ckt-white-logo.svg'
 
 export default function AppTitle({ setOpenMaps, address }) {
   return (
-    <AppBar sx={{ position: 'static', py: 1, width: '100%' }}>
+    <AppBar sx={{ position: 'static', py: 1, width: '100%', bgcolor: '#424489'}}>
       <Box sx={{
         display: 'flex',
         alignItems: 'center',
@@ -17,7 +17,9 @@ export default function AppTitle({ setOpenMaps, address }) {
           alignItems: 'center',
           justifyContent: 'center'
         }}>
+          <a href="https://creativetechcenter.ru/">
           <img src={logo} className="App-logo" alt="logo" />
+          </a>
           <div>
             <Typography sx={{ flex: 1 }} variant="h5" component="div">
               Зарядная станция
