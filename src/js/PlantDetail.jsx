@@ -18,7 +18,7 @@ function stateMessage(empty=false, charging=false, available=true){
     return 'Свободна';
 }
 
-function PlantDetail({ url, onClickClose, onOpen }) {
+function PlantDetail({ url, onClickClose, onOpen, onChargePlant, onStopChargePlant }) {
   const [loading, setLoading] = useState(true);
   const [id, setId] = useState(null);
   const [charge, setCharge] = useState(0);
@@ -55,12 +55,6 @@ function PlantDetail({ url, onClickClose, onOpen }) {
         .finally(() => setLoading(false))
         .catch(error => console.error('Error fetching plant details:', error)));
   }, [charge, temperature, voltage]);
-
-
-  const handleAcceptClose = () => {
-    onOpen(id)
-    onClickClose()
-  };
 
   if (loading) return <CircularProgress color="inherit" />
 
@@ -101,7 +95,10 @@ function PlantDetail({ url, onClickClose, onOpen }) {
     null
     : <DialogActions>
         <Button
-          onClick={handleAcceptClose}
+          onClick={() => {
+            onOpen(id)
+            onClickClose()
+          }}
           variant='contained'
           disabled={!controllable || reserved}
         >
@@ -110,7 +107,10 @@ function PlantDetail({ url, onClickClose, onOpen }) {
 
         {
           !withDoor && empty ? <Button
-          onClick={onClickClose}
+          onClick={() => {
+            onClickClose()
+            onChargePlant(id)
+          }}
           variant='contained'
           disabled={!controllable || reserved}
         >
@@ -120,7 +120,10 @@ function PlantDetail({ url, onClickClose, onOpen }) {
 
         {
           !withDoor && !empty ? <Button
-          onClick={onClickClose}
+          onClick={() => {
+            onClickClose()
+            onStopChargePlant(id)
+          }}
           variant='contained'
           disabled={!controllable || reserved}
         >

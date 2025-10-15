@@ -12,7 +12,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import '../cs/styles.css'
 
 {/* Dialog. Информация о ячейке */ }
-export function PlantInfoDialog({ open, onClickClose, cell, onPlantOpen }) {
+export function PlantInfoDialog({ open, onClickClose, cell, onPlantOpen, onChargePlant, onStopChargePlant }) {
   return (
     <Dialog
       maxWidth={'md'}
@@ -25,6 +25,8 @@ export function PlantInfoDialog({ open, onClickClose, cell, onPlantOpen }) {
         url={cell}
         onClickClose={onClickClose}
         onOpen={onPlantOpen}
+        onChargePlant={onChargePlant}
+        onStopChargePlant={onStopChargePlant}
       />
     </Dialog>
   )

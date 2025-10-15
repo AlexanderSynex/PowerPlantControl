@@ -67,6 +67,25 @@ export default function PowerControl() {
     }))
   }
 
+  const charge_plant = (id) => {
+    if (!socket.current) return;
+    socket.current.send(JSON.stringify({
+      user: sessionId,
+      action: "startcharge",
+      plant: id
+    }))
+  }
+
+  const stop_charge_plant = (id) => {
+    if (!socket.current) return;
+    socket.current.send(JSON.stringify({
+      user: sessionId,
+      action: "startcharge",
+      plant: id
+    }))
+  }
+
+
   useEffect(() => {
     fetch('/api/locations')  // Replace with your config endpoint
       .then(response => response.json())
@@ -160,6 +179,8 @@ export default function PowerControl() {
       <PlantInfoDialog
         open={openDetails}
         cell={currentCell}
+        onChargePlant={charge_plant}
+        onStopChargePlant={stop_charge_plant}
         onClickClose={() => setOpenDetails(false)}
         onPlantOpen={open_plant}
       />
