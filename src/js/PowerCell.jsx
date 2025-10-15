@@ -8,28 +8,15 @@ import { IoTimerOutline } from "react-icons/io5";
 
 import { RiBattery2ChargeLine } from "react-icons/ri";
 
-const basic_fill = 'yellow';
-
-// function stateToColor(state, available=true, reserved=false){
-//     // if (!available) return 'darkgrey'   //Серый — ячейка заблокирована (неактивна)
-//     // if (reserved & state === 'charging') return '#228B22'   //Жёлтый — ячейка забронирована
-//     // if (reserved) return '#663399'
-//     // switch (state) {
-//     //     case "ready": return basic_fill;
-//     //     case "disabled": return 'grey';
-//     //     case "charging": return '#4169E1';
-//     //     default: return basic_fill; //empty
-//     // }
-// }
+const basic_fill = '#dad600';
 
 function stateToColor(charging=false, available=true, reserved=false){
     if (!available) return 'darkgrey'   //Серый — ячейка заблокирована (неактивна)
     if (reserved & charging) return '#228B22'   //Жёлтый — ячейка забронирована
-    if (reserved) return '#663399'
-    if (charging) return '#4169E1';
+    if (reserved)  return '#8f40df'
+    if (charging)  return '#4169E1';
     return basic_fill;
 }
-
 
 function PowerCell({url, onDisplayDetails, setCellApiUrl, update, onUpdated}) {
     const [color, setColor] = useState(basic_fill);

@@ -109,7 +109,7 @@ function PlantDetail({ url, onClickClose, onOpen }) {
         </Button>
 
         {
-          withDoor && empty ? <Button
+          !withDoor && empty ? <Button
           onClick={onClickClose}
           variant='contained'
           disabled={!controllable || reserved}
@@ -119,7 +119,7 @@ function PlantDetail({ url, onClickClose, onOpen }) {
         }
 
         {
-          withDoor && !empty ? <Button
+          !withDoor && !empty ? <Button
           onClick={onClickClose}
           variant='contained'
           disabled={!controllable || reserved}
