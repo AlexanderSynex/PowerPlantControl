@@ -54,7 +54,7 @@ function PlantDetail({ url, onClickClose, onOpen }) {
         })
         .finally(() => setLoading(false))
         .catch(error => console.error('Error fetching plant details:', error)));
-  }, [charge, temp, voltage]);
+  }, [charge, temperature, voltage]);
 
 
   const handleAcceptClose = () => {
