@@ -8,7 +8,7 @@ import { IoTimerOutline } from "react-icons/io5";
 
 import { RiBattery2ChargeLine } from "react-icons/ri";
 
-const basic_fill = '#dad600';
+const basic_fill = '#fffb00';
 
 function stateToColor(charging=false, available=true, reserved=false){
     if (!available) return 'darkgrey'   //Серый — ячейка заблокирована (неактивна)
