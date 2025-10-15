@@ -12,7 +12,6 @@ function PowerPlant({ apiUrl, onDisplayDetails, setCellApiUrl, update, onUpdated
     fetch(apiUrl)  // Replace with your config endpoint
       .then(response => response.json()
         .then(data => {
-          console.log(data)
           setLayers(data?.layers);
           setLoading(false);
         })

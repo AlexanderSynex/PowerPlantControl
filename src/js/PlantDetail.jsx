@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import "../cs/styles.css"
 
@@ -8,37 +8,39 @@ import {
   DialogContentText, 
   DialogTitle, 
   DialogActions,
-  CircularProgress, 
-  Tooltip} from '@mui/material'
+  CircularProgress} from '@mui/material'
 
 
-function stateMessage(state) {
-  switch (state) {
-    case "ready": return 'Заряжена';
-    case "disabled": return 'Отключена';
-    case "charging": return 'Заряжается';
-  }
-  return 'Свободна'; //empty
+function stateMessage(empty=false, charging=false, available=true){
+    if (!available) return 'Отключена';
+    if (charging) return 'Заряжается';
+    if (!empty) return 'Занята';
+    return 'Свободна';
 }
 
 function PlantDetail({ url, onClickClose, onOpen }) {
   const [loading, setLoading] = useState(true);
   const [id, setId] = useState(null);
   const [charge, setCharge] = useState(0);
-  const [status, setStatus] = useState(null);
+  const [empty, setEmpty] = useState(false);
+  const [charging, setCharging] = useState(false);
+  const [available, setAvailable] = useState(false);
   const [voltage, setVoltage] = useState(null);
   const [reserved, setReserved] = useState(false);
   const [opened, setOpened] = useState(false);
   const [controllable, setControllable] = useState(false)
-      
+  const [temperature, setTemperature] = useState(20)
 
   useEffect(() => {
     fetch(url)  // Replace with your config endpoint
       .then(response => response.json()
         .then(data => {
-          setStatus(data?.status);
           setId(data?.id);
           setCharge(data?.charge);
+          setAvailable(data?.available);
+          setCharging(data?.charging);
+          setTemperature(data?.temp);
+          setEmpty(data?.empty);
           setReserved(data?.reserved)
           setOpened(data?.opened)
           setVoltage(data?.voltage)
@@ -63,7 +65,7 @@ function PlantDetail({ url, onClickClose, onOpen }) {
     </DialogTitle>
     <DialogContent>
       <DialogContentText id="alert-dialog-description">
-        Состояние: <b>{stateMessage(status)}</b>
+        Состояние: <b>{stateMessage(empty, charging, available)}</b>
       </DialogContentText>
       <DialogContentText id="alert-dialog-description">
         Заряд: <b>{charge}%</b>
@@ -74,6 +76,9 @@ function PlantDetail({ url, onClickClose, onOpen }) {
       </DialogContentText>
       : null
       }
+      <DialogContentText id="alert-dialog-description">
+        Температура: <b>{temperature}%</b>
+      </DialogContentText>
       {reserved ?
         <DialogContentText id="alert-dialog-description">
           Ячейка зарезервирована

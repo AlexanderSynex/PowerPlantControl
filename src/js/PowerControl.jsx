@@ -91,7 +91,6 @@ export default function PowerControl() {
       if (isServerEvent(event)) {
         let data = JSON.parse(event?.data);
         let action = data?.action;
-        console.log(data)
         if (action === 'update') {
           setUpdate(true)
           if (data?.who === `${sessionId}`) {
@@ -105,6 +104,7 @@ export default function PowerControl() {
 
         if (action === 'notify_close') {
           if (data?.who === `${sessionId}`) {
+            console.log('notify_close:', data?.plant)
             setOpenedCrates(data?.plant);
             setOpenOpenedWarning(true);
           }
@@ -118,7 +118,6 @@ export default function PowerControl() {
         socket.current.close();
     };
   }, [socket.current]);
-//https://cybertex.pro/auth?token=ff22b036-98a7-4b91-8055-38f964a4ea6e
 
   if (loading) return <Backdrop
     sx={() => ({ color: '#fff', zIndex: 1000 })}
