@@ -8,7 +8,8 @@ import {
   DialogContentText, 
   DialogTitle, 
   DialogActions,
-  CircularProgress} from '@mui/material'
+  CircularProgress,
+  Stack} from '@mui/material'
 
 
 function stateMessage(empty=false, charging=false, available=true){
@@ -66,11 +67,10 @@ function PlantDetail({ url, onClickClose, onOpen, onChargePlant, onStopChargePla
       <DialogContentText id="alert-dialog-description">
         Состояние: <b>{stateMessage(empty, charging, available)}</b>
       </DialogContentText>
-      
-      <DialogContentText id="alert-dialog-description">
+      {!empty ? <DialogContentText id="alert-dialog-description">
         Заряд: <b>{charge}%</b>
-      </DialogContentText>
-      {charging ? 
+      </DialogContentText> : null}
+      {charging && !empty ? 
       <DialogContentText id="alert-dialog-description">
         Мощность: <b>{power} Вт</b>
       </DialogContentText> :
@@ -94,6 +94,7 @@ function PlantDetail({ url, onClickClose, onOpen, onChargePlant, onStopChargePla
     {opened ? 
     null
     : <DialogActions>
+      <Stack direction="column" spacing={1} width="100%">
         <Button
           onClick={() => {
             onOpen(id)
@@ -130,7 +131,7 @@ function PlantDetail({ url, onClickClose, onOpen, onChargePlant, onStopChargePla
           Остановить зарядную сессию
         </Button> : null
         }
-        
+        </Stack>
       </DialogActions>
     }
   </div>)
