@@ -22,14 +22,18 @@ function PlantDetail({ url, onClickClose, onOpen }) {
   const [loading, setLoading] = useState(true);
   const [id, setId] = useState(null);
   const [charge, setCharge] = useState(0);
+  const [power, setPower] = useState(0);
   const [empty, setEmpty] = useState(false);
   const [charging, setCharging] = useState(false);
   const [available, setAvailable] = useState(false);
   const [voltage, setVoltage] = useState(null);
+  
   const [reserved, setReserved] = useState(false);
   const [opened, setOpened] = useState(false);
   const [controllable, setControllable] = useState(false)
   const [temperature, setTemperature] = useState(20)
+
+  const [withDoor, setWithDoor] = useState(false);
 
   useEffect(() => {
     fetch(url)  // Replace with your config endpoint
@@ -41,16 +45,17 @@ function PlantDetail({ url, onClickClose, onOpen }) {
           setCharging(data?.charging);
           setTemperature(data?.temp);
           setEmpty(data?.empty);
-          setReserved(data?.reserved)
-          setOpened(data?.opened)
-          setVoltage(data?.voltage)
-          setControllable(data?.controllable)
+          setReserved(data?.reserved);
+          setPower(data?.power);
+          setOpened(data?.opened);
+          setVoltage(data?.voltage);
+          setWithDoor(data?.with_door);
+          setControllable(data?.controllable);
         })
         .finally(() => setLoading(false))
         .catch(error => console.error('Error fetching plant details:', error)));
-  }, []);
+  }, [charge, temp, voltage]);
 
-  
 
   const handleAcceptClose = () => {
     onOpen(id)
@@ -67,17 +72,23 @@ function PlantDetail({ url, onClickClose, onOpen }) {
       <DialogContentText id="alert-dialog-description">
         Состояние: <b>{stateMessage(empty, charging, available)}</b>
       </DialogContentText>
+      
       <DialogContentText id="alert-dialog-description">
         Заряд: <b>{charge}%</b>
       </DialogContentText>
+      {charging ? 
+      <DialogContentText id="alert-dialog-description">
+        Мощность: <b>{power} Вт</b>
+      </DialogContentText> :
+      null}
       {voltage > 0 ? 
       <DialogContentText id="alert-dialog-description">
-        Напряжение: <b>{voltage}%</b>
+        Напряжение: <b>{voltage} мВ</b>
       </DialogContentText>
       : null
       }
       <DialogContentText id="alert-dialog-description">
-        Температура: <b>{temperature}%</b>
+        Температура: <b>{temperature}&deg;C</b>
       </DialogContentText>
       {reserved ?
         <DialogContentText id="alert-dialog-description">
@@ -96,6 +107,27 @@ function PlantDetail({ url, onClickClose, onOpen }) {
         >
           Открыть
         </Button>
+
+        {
+          withDoor && empty ? <Button
+          onClick={onClickClose}
+          variant='contained'
+          disabled={!controllable || reserved}
+        >
+          Начать зарядную сессию
+        </Button> : null
+        }
+
+        {
+          withDoor && !empty ? <Button
+          onClick={onClickClose}
+          variant='contained'
+          disabled={!controllable || reserved}
+        >
+          Остановить зарядную сессию
+        </Button> : null
+        }
+        
       </DialogActions>
     }
   </div>)
