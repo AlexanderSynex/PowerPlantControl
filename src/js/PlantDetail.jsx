@@ -113,7 +113,7 @@ function PlantDetail({ url, onClickClose, onOpen, onChargePlant, onStopChargePla
             onChargePlant(id)
           }}
           variant='contained'
-          disabled={!controllable || reserved || empty}
+          disabled={!controllable || reserved}
         >
           Начать зарядную сессию
         </Button> : null
@@ -126,7 +126,7 @@ function PlantDetail({ url, onClickClose, onOpen, onChargePlant, onStopChargePla
             onStopChargePlant(id)
           }}
           variant='contained'
-          disabled={!controllable || reserved|| empty}
+          disabled={!controllable || reserved}
         >
           Остановить зарядную сессию
         </Button> : null
