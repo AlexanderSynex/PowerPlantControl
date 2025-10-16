@@ -107,26 +107,26 @@ function PlantDetail({ url, onClickClose, onOpen, onChargePlant, onStopChargePla
         </Button>
 
         {
-          !withDoor && empty ? <Button
+          !withDoor && !charging ? <Button
           onClick={() => {
             onClickClose()
             onChargePlant(id)
           }}
           variant='contained'
-          disabled={!controllable || reserved}
+          disabled={!controllable || reserved || empty}
         >
           Начать зарядную сессию
         </Button> : null
         }
 
         {
-          !withDoor && !empty ? <Button
+          !withDoor && charging ? <Button
           onClick={() => {
             onClickClose()
             onStopChargePlant(id)
           }}
           variant='contained'
-          disabled={!controllable || reserved}
+          disabled={!controllable || reserved|| empty}
         >
           Остановить зарядную сессию
         </Button> : null
