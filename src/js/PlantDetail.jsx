@@ -91,21 +91,23 @@ function PlantDetail({ url, onClickClose, onOpen, onChargePlant, onStopChargePla
         : null
       }
     </DialogContent>
-    {opened ? 
-    null
-    : <DialogActions>
+    <DialogActions>
       <Stack direction="column" spacing={1} width="100%">
-        <Button
-          onClick={() => {
-            onOpen(id)
-            onClickClose()
-          }}
-          variant='contained'
-          disabled={!controllable || reserved}
-        >
-          Открыть
-        </Button>
-
+        
+        {opened ? 
+          null
+          : 
+          <Button
+            onClick={() => {
+              onOpen(id)
+              onClickClose()
+            }}
+            variant='contained'
+            disabled={!controllable || reserved}
+          >
+            Открыть
+          </Button>
+        }
         {
           !withDoor && !charging ? <Button
           onClick={() => {
@@ -133,7 +135,6 @@ function PlantDetail({ url, onClickClose, onOpen, onChargePlant, onStopChargePla
         }
         </Stack>
       </DialogActions>
-    }
   </div>)
 }
 
