@@ -80,7 +80,7 @@ export default function PowerControl() {
     if (!socket.current) return;
     socket.current.send(JSON.stringify({
       user: sessionId,
-      action: "startcharge",
+      action: "stopcharge",
       plant: id
     }))
   }
