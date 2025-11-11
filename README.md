@@ -8,12 +8,9 @@ React web-приложение для управления стационарн�
 Проект включает веб-приложение для пользовательского интерфейса и Python-сервер для взаимодействия с оборудованием станции на базе Arduino.
 
 
-![Главное окно](https://github.com/AlexanderSynex/PowerPlantControl/blob/main/assets/main.jpg?raw=true)
-
-
-![Детали ячейки](https://github.com/AlexanderSynex/PowerPlantControl/blob/main/assets/details.jpg?raw=true)
-
-![Выбор зарядной станции](https://github.com/AlexanderSynex/PowerPlantControl/blob/main/assets/maps.jpg?raw=true)
+<img src="https://github.com/AlexanderSynex/PowerPlantControl/blob/main/assets/main.jpg?raw=true" width="200">
+<img src="https://github.com/AlexanderSynex/PowerPlantControl/blob/main/assets/details.jpg?raw=true" width="200">
+<img src="https://github.com/AlexanderSynex/PowerPlantControl/blob/main/assets/maps.jpg?raw=true" width="200">
 
 ## Структура проекта
 
