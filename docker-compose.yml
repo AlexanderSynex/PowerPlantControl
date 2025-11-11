@@ -19,7 +19,9 @@ services:
       - app-network
 
   frontend-app:
-    build: .
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: frontend-app
     restart: unless-stopped
     environment:
@@ -33,7 +35,7 @@ services:
   api-server:
     restart: unless-stopped
     build: 
-      context: ./api-webserver
+      context: ./backend
       dockerfile: Dockerfile
     container_name: api-server
     environment:

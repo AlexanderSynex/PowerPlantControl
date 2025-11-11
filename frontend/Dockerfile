@@ -2,9 +2,9 @@
 FROM node:lts-alpine AS builder
 
 WORKDIR /app
-COPY package*.json ./
+COPY frontend/package*.json ./
 RUN npm ci
-COPY . .
+COPY frontend/ .
 RUN npm run build
 
 # Production stage
@@ -13,7 +13,7 @@ FROM node:lts-alpine AS production
 WORKDIR /app
 
 # Copy package files and install only production dependencies
-COPY package*.json ./
+COPY frontend/package*.json ./
 RUN npm ci --only=production && npm cache clean --force
 
 # Copy built application
@@ -35,5 +35,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:80 || exit 1
 
 # Start the application
-# CMD ["serve", "-s", "dist", "-l", "80"]
 CMD ["serve", "-s", "dist", "-l", "3000"]
